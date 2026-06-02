@@ -2437,6 +2437,30 @@ img{display:block;max-width:100%}
   }
 }
 
+
+/* Patch v20.3 · mapa limpio con ruta visible */
+.map-current,
+.current-map,
+.map-stop,
+.map-info,
+.location-card,
+.map-card-overlay,
+.map-expanded .route-leg,
+.map-expanded .map-mode-tabs{
+  display:none !important;
+}
+
+.map-expanded-view .google-map-frame{
+  width:100% !important;
+  height:100% !important;
+}
+
+@media(max-width:899px){
+  .map-expanded.is-open{
+    grid-template-rows:auto minmax(0, 1fr) auto !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2670,7 +2694,7 @@ img{display:block;max-width:100%}
 <div class="map-expanded" id="expandedMapShell" aria-hidden="true">
   <div class="map-expanded-head">
     <div>
-      <span>Mapa del monumento</span>
+      <span>Mapa de la ruta</span>
       <strong id="expandedMapTitle">Ruta activa</strong>
     </div>
     <button class="map-close" id="closeExpandedMap" type="button" aria-label="Cerrar mapa">×</button>
@@ -2850,6 +2874,17 @@ img{display:block;max-width:100%}
     return `https://maps.google.com/maps?hl=es&q=${encodeURIComponent(query)}&z=${zoom}&output=embed`;
   }
 
+  function googleWalkingRouteEmbedUrl(fromQuery, toQuery){
+    if(!toQuery) return googleQueryUrl(fromQuery, 16);
+    return `https://maps.google.com/maps?hl=es&saddr=${encodeURIComponent(fromQuery)}&daddr=${encodeURIComponent(toQuery)}&dirflg=w&output=embed`;
+  }
+
+  function googleWalkingRouteExternalUrl(fromQuery, toQuery){
+    if(!toQuery) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fromQuery)}`;
+    return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(fromQuery)}&destination=${encodeURIComponent(toQuery)}&travelmode=walking`;
+  }
+
+
   function googleAreaUrl(){
     return `https://maps.google.com/maps?hl=es&q=${encodeURIComponent("casco histórico Zamora España")}&z=15&output=embed`;
   }
@@ -2876,12 +2911,11 @@ img{display:block;max-width:100%}
       compactSrc = googleQueryUrl(place.query, 17);
       compactTitle = `Mapa de ${place.title}`;
     }else if(mode === "area"){
-      compactSrc = googleAreaUrl();
-      compactTitle = `Mapa general de la zona histórica de Zamora`;
+      compactSrc = googleAreaUrl ? googleAreaUrl() : googleQueryUrl("casco histórico Zamora España", 15);
+      compactTitle = `Mapa general de Zamora`;
     }else{
-      const target = nextPlace || place;
-      compactSrc = googleQueryUrl(target.query, 17);
-      compactTitle = nextPlace ? `Siguiente parada: ${nextPlace.title}` : `Parada final: ${place.title}`;
+      compactSrc = googleWalkingRouteEmbedUrl(place.query, nextPlace ? nextPlace.query : null);
+      compactTitle = nextPlace ? `Ruta andando: ${place.title} a ${nextPlace.title}` : `Parada final: ${place.title}`;
     }
 
     ["mobileRouteMap","desktopRouteMap"].forEach(id => {
@@ -2891,6 +2925,7 @@ img{display:block;max-width:100%}
 
     const expanded = $("expandedRouteMap");
     if(expanded){
+      // En el panel grande, el usuario espera ver la ruta, no una ficha ni una zona genérica.
       expanded.innerHTML = mapFrameHTML(compactSrc, compactTitle);
     }
 
@@ -2921,14 +2956,14 @@ img{display:block;max-width:100%}
     ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
     ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
 
-    const external = nextPlace ? googleExternalDirectionsUrl(place.query, nextPlace.query) : place.maps;
+    const external = nextPlace ? googleWalkingRouteExternalUrl(place.query, nextPlace.query) : place.maps;
     ["mobileEmergencyMaps","desktopEmergencyMaps","expandedEmergencyMaps"].forEach(id => $(id) && ($(id).href = external));
   }
 
   function openExpandedMap(){
     $("expandedMapShell").classList.add("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","false");
-    renderGoogleMaps("current");
+    renderGoogleMaps("next");
   }
 
   function closeExpandedMap(){
