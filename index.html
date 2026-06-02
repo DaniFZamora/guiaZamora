@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Qué ver en Zamora según el tiempo que tengas | Abrir Google Maps integrado</title>
+<!-- v20-no-api-route: ruta integrada sin API usando maps.google.com/maps?f=d...&output=embed -->
+<title>Qué ver en Zamora según el tiempo que tengas | Google Maps integrado</title>
 <meta name="description" content="Guía móvil visual para recorrer Zamora por escenas, con rutas según el tiempo disponible y acceso directo a Abrir Google Maps.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1081,7 +1082,7 @@ img{display:block;max-width:100%}
 }
 
 
-/* V11 · Abrir Google Maps integrado */
+/* V11 · Google Maps integrado */
 .internal-map-card{
   background:rgba(247,239,228,.92);
   border:1px solid rgba(27,18,13,.10);
@@ -2385,18 +2386,125 @@ img{display:block;max-width:100%}
 }
 
 
-/* Patch v20.1 · mapa centrado en monumento actual */
+/* Patch v20-sin-api · ruta integrada con iframe Google Maps, mismo patrón que guía de tapeo */
+.map-expanded-view{
+  position:relative !important;
+}
+.route-map-overlay{
+  position:absolute;
+  left:12px;
+  right:12px;
+  top:12px;
+  z-index:5;
+  background:rgba(247,239,228,.95);
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:20px;
+  padding:12px;
+  color:var(--ink);
+  box-shadow:0 14px 34px rgba(27,18,13,.16);
+  pointer-events:none;
+}
+.route-map-overlay *{
+  pointer-events:none;
+}
+.route-map-dots,
+.route-map-dot{
+  pointer-events:auto;
+}
+.route-map-overlay__top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.route-map-overlay__label{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+}
+.route-map-overlay__title{
+  display:block;
+  margin-top:4px;
+  font-family:var(--serif);
+  font-size:24px;
+  line-height:.92;
+  font-weight:400;
+}
+.route-map-overlay__count{
+  flex:0 0 auto;
+  color:#766754;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.route-map-overlay__next{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+.route-map-dots{
+  display:flex;
+  gap:6px;
+  margin-top:10px;
+  overflow-x:auto;
+  padding-bottom:2px;
+}
+.route-map-dot{
+  flex:0 0 auto;
+  min-width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  border:1px solid rgba(27,18,13,.14);
+  background:#fff;
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+.route-map-dot.is-done{
+  background:var(--wine);
+  color:#fff;
+  border-color:var(--wine);
+}
+.route-map-dot.is-current{
+  background:var(--gold);
+  color:var(--ink);
+  border-color:var(--gold);
+}
 @media(max-width:899px){
-  .map-expanded-head span::after{
-    content:"";
+  .map-expanded{
+    padding:0 !important;
   }
-
-  .map-expanded-head span{
-    font-size:9px !important;
+  .map-expanded.is-open{
+    display:grid !important;
+    grid-template-rows:auto minmax(0,1fr) auto !important;
   }
-
-  .map-expanded-head strong{
-    max-width:10ch;
+  .map-expanded-view{
+    border-radius:0 !important;
+    min-height:0;
+  }
+  .route-map-overlay{
+    top:14px;
+    left:14px;
+    right:14px;
+    padding:11px 12px;
+  }
+  .route-map-overlay__title{
+    font-size:22px;
+    max-width:12ch;
+  }
+  .route-map-overlay__next{
+    font-size:12.5px;
   }
 }
 
@@ -2518,7 +2626,7 @@ img{display:block;max-width:100%}
           <p id="mobileLegText">—</p>
         </div>
         <div class="internal-map-actions">
-          <button class="btn ghost" id="mobileOpenMap" type="button">Ver mapa</button>
+          <button class="btn ghost" id="mobileOpenMap" type="button">Mapa</button>
           <a class="btn ghost" id="mobileEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
         </div>
       </section>
@@ -2625,7 +2733,7 @@ img{display:block;max-width:100%}
 </main>
 
 <div class="bottom-rail">
-  <button class="btn primary" id="bottomOpenMap" type="button">Ver mapa</button>
+  <button class="btn primary" id="bottomOpenMap" type="button">Mapa</button>
   <button class="btn ghost" id="bottomNext" type="button">Siguiente</button>
 </div>
 
@@ -2854,7 +2962,8 @@ img{display:block;max-width:100%}
 
     const expanded = $("expandedRouteMap");
     if(expanded){
-      expanded.innerHTML = mapFrameHTML(compactSrc, compactTitle);
+      const expandedSrc = googleAreaUrl();
+      expanded.innerHTML = mapFrameHTML(expandedSrc, `Mapa general de la ruta: ${selectedRoute.title}`);
     }
 
     updateMapModeButtons(mode);
@@ -2864,6 +2973,99 @@ img{display:block;max-width:100%}
     document.querySelectorAll("[data-map-mode]").forEach(btn => {
       btn.classList.toggle("is-active", btn.dataset.mapMode === mode);
     });
+  }
+
+
+  function selectedRoutePlan(){
+    const keys = selectedRoute.stops;
+    const originKey = keys[0];
+    const destinationKey = keys[keys.length - 1];
+    const waypointKeys = keys.slice(1, -1);
+
+    return {
+      origin: places[originKey].query,
+      destination: places[destinationKey].query,
+      waypoints: waypointKeys.map(key => places[key].query),
+      embedOrigin: places[originKey].query,
+      embedDestination: places[destinationKey].query,
+      travelmode: "walking"
+    };
+  }
+
+  function googleDirectionsUrlForSelectedRoute(){
+    const plan = selectedRoutePlan();
+    const params = new URLSearchParams({
+      api: "1",
+      origin: plan.origin,
+      destination: plan.destination,
+      travelmode: plan.travelmode || "walking"
+    });
+    if(plan.waypoints && plan.waypoints.length){
+      params.set("waypoints", plan.waypoints.join("|"));
+    }
+    return `https://www.google.com/maps/dir/?${params.toString()}`;
+  }
+
+  function googleEmbedDirectionsSrcForSelectedRoute(){
+    const plan = selectedRoutePlan();
+    const daddr = [...(plan.waypoints || []), plan.embedDestination || plan.destination].join(" to ");
+    return `https://maps.google.com/maps?f=d&source=s_d&saddr=${encodeURIComponent(plan.embedOrigin || plan.origin)}&daddr=${encodeURIComponent(daddr)}&dirflg=w&output=embed`;
+  }
+
+  function renderNoApiRouteStatus(){
+    const box = $("routeMapOverlay");
+    if(!box) return;
+
+    const keys = selectedRoute.stops;
+    const currentKey = keys[activeStop];
+    const nextKey = keys[activeStop + 1];
+    const current = places[currentKey];
+    const next = nextKey ? places[nextKey] : null;
+    const dir = routeDirections[currentKey] || {};
+
+    const dots = keys.map((key, idx) => {
+      const cls = idx < activeStop ? "is-done" : idx === activeStop ? "is-current" : "";
+      return `<button class="route-map-dot ${cls}" type="button" data-map-stop="${idx}" aria-label="Ir a ${places[key].title}">${String(idx + 1).padStart(2,"0")}</button>`;
+    }).join("");
+
+    box.innerHTML = `
+      <div class="route-map-overlay__top">
+        <div>
+          <span class="route-map-overlay__label">Estás aquí</span>
+          <strong class="route-map-overlay__title">${current.title}</strong>
+        </div>
+        <span class="route-map-overlay__count">${activeStop + 1}/${keys.length}</span>
+      </div>
+      <p class="route-map-overlay__next">${next ? `Siguiente: ${next.title} · ${dir.minutes || "siguiente tramo"}` : "Ruta terminada. Puedes volver al monumento o abrir Google Maps."}</p>
+      <div class="route-map-dots">${dots}</div>
+    `;
+
+    box.querySelectorAll("[data-map-stop]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeStop = Number(btn.dataset.mapStop);
+        updateState();
+        renderNoApiRouteStatus();
+      });
+    });
+  }
+
+  function renderNoApiIntegratedRouteMap(){
+    const container = $("expandedRouteMap");
+    if(!container) return;
+
+    if($("expandedMapTitle")) $("expandedMapTitle").textContent = selectedRoute.title;
+
+    const src = googleEmbedDirectionsSrcForSelectedRoute();
+    container.innerHTML = `
+      ${mapFrameHTML(src, `Ruta completa: ${selectedRoute.title}`)}
+      <div id="routeMapOverlay" class="route-map-overlay"></div>
+    `;
+
+    renderNoApiRouteStatus();
+
+    if($("expandedEmergencyMaps")){
+      $("expandedEmergencyMaps").href = googleDirectionsUrlForSelectedRoute();
+    }
   }
 
   function updateMapCopy(){
@@ -2878,8 +3080,7 @@ img{display:block;max-width:100%}
       : "Has llegado al final de esta ruta. Usa el mapa grande para orientarte o volver al centro.";
     const meta = `${activeStop + 1}/${selectedRoute.stops.length}`;
 
-    ["mobileMapTitle","desktopMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
-    if($("expandedMapTitle")) $("expandedMapTitle").textContent = place.title;
+    ["mobileMapTitle","desktopMapTitle","expandedMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
     ["mobileMapMeta","desktopMapMeta"].forEach(id => $(id) && ($(id).textContent = meta));
     ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
     ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
@@ -2891,13 +3092,14 @@ img{display:block;max-width:100%}
   function openExpandedMap(){
     $("expandedMapShell").classList.add("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","false");
-    renderGoogleMaps("current");
+    renderNoApiIntegratedRouteMap();
   }
 
   function closeExpandedMap(){
     $("expandedMapShell").classList.remove("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","true");
     renderGoogleMaps("next");
+    if($("expandedMapShell")?.classList.contains("is-open")) renderNoApiRouteStatus();
   }
 
 
