@@ -2370,6 +2370,20 @@ img{display:block;max-width:100%}
   }
 }
 
+
+/* Patch v20 · ruta por defecto activa de verdad */
+@media(max-width:899px){
+  .route-option.is-active::before{
+    content:"Lista para empezar" !important;
+  }
+}
+
+@media(min-width:900px){
+  .route-option.is-active::before{
+    content:"Lista para empezar" !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2398,8 +2412,8 @@ img{display:block;max-width:100%}
           <h1>Qué ver en Zamora según el tiempo que tengas</h1>
           <p class="hero-lead">Elige una duración y baja por la guía. Cada parada funciona como una escena: foto, qué mirar, qué hacer y botón directo a Maps.</p>
           <div class="hero-actions">
-            <a class="btn primary" href="#selector">Elegir mi ruta</a>
-            <button class="btn outline" id="recommendedHero" type="button">Usar ruta recomendada</button>
+            <a class="btn primary" href="#selector">Elegir ruta</a>
+            <button class="btn outline" id="recommendedHero" type="button">Empezar ruta 2h</button>
           </div>
         </div>
       </article>
@@ -2758,7 +2772,18 @@ img{display:block;max-width:100%}
     const sources = place.images || [];
     let i = 0;
     img.referrerPolicy = "no-referrer";
-    function next(){
+  
+  document.querySelectorAll('a[href="#ruta"]').forEach(link => {
+    link.addEventListener("click", () => {
+      document.body.classList.add("route-mode");
+      activeStop = 0;
+      updateState();
+      updateMapCopy();
+      renderGoogleMaps("next");
+    });
+  });
+
+  function next(){
       const src = sources[i];
       if(!src){ img.onerror = null; img.src = placeholderSvg(); return; }
       img.onerror = () => { i += 1; next(); };
@@ -2860,6 +2885,20 @@ img{display:block;max-width:100%}
   }
 
 
+
+  function startSelectedRoute(scrollToFirstStop = true){
+    // La ruta ya está seleccionada. Esto activa de verdad la experiencia de guía:
+    // HUD, progreso, botón Mapa/Siguiente y mapa sincronizado.
+    document.body.classList.add("route-mode");
+    activeStop = 0;
+    renderAll();
+    updateMapCopy();
+    renderGoogleMaps("next");
+    if(scrollToFirstStop){
+      setTimeout(() => document.querySelector(".step")?.scrollIntoView({behavior:"smooth", block:"start"}), 80);
+    }
+  }
+
   function renderOptions(){
     $("routeOptions").innerHTML = routes.map(route => `
       <button class="route-option ${route.id === selectedRoute.id ? "is-active" : ""}" data-route="${route.id}" type="button">
@@ -2873,10 +2912,7 @@ img{display:block;max-width:100%}
     document.querySelectorAll("[data-route]").forEach(btn => {
       btn.addEventListener("click", () => {
         selectedRoute = routes.find(r => r.id === btn.dataset.route);
-        activeStop = 0;
-        document.body.classList.add("route-mode");
-        renderAll();
-        setTimeout(() => document.querySelector(".step")?.scrollIntoView({behavior:"smooth", block:"start"}), 80);
+        startSelectedRoute(true);
       });
     });
   }
@@ -2997,6 +3033,37 @@ img{display:block;max-width:100%}
     document.getElementById(`step-${idx}`)?.scrollIntoView({behavior:"smooth", block:"start"});
   }
 
+
+  function buildRouteModeObserver(){
+    const tour = document.querySelector(".tour");
+    const selector = document.getElementById("selector");
+    const hero = document.getElementById("inicio");
+
+    if(tour){
+      const tourObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            document.body.classList.add("route-mode");
+            updateMapCopy();
+            renderGoogleMaps("next");
+          }
+        });
+      }, {threshold:0.08});
+      tourObserver.observe(tour);
+    }
+
+    if(selector){
+      const selectorObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting && entry.intersectionRatio > 0.35){
+            document.body.classList.remove("route-mode");
+          }
+        });
+      }, {threshold:[0.35, 0.6]});
+      selectorObserver.observe(selector);
+    }
+  }
+
   function buildObserver(){
     observer?.disconnect();
     observer = new IntersectionObserver((entries) => {
@@ -3029,10 +3096,7 @@ img{display:block;max-width:100%}
   });
   $("recommendedHero").addEventListener("click", () => {
     selectedRoute = routes[0];
-    activeStop = 0;
-    document.body.classList.add("route-mode");
-    renderAll();
-    $("ruta").scrollIntoView({behavior:"smooth", block:"start"});
+    startSelectedRoute(true);
   });
 
   function next(){
@@ -3055,6 +3119,7 @@ img{display:block;max-width:100%}
   });
 
   renderAll();
+  buildRouteModeObserver();
 })();
 </script>
 </body>
