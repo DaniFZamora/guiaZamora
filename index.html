@@ -2461,6 +2461,60 @@ img{display:block;max-width:100%}
   }
 }
 
+
+/* Patch v20.4 · tres acciones en la vista mapa */
+.map-expanded-actions{
+  grid-template-columns:1fr 1fr 1fr !important;
+}
+
+.map-expanded-actions .btn{
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#expandedNextStop{
+  background:var(--wine) !important;
+  color:white !important;
+  border-color:var(--wine) !important;
+}
+
+@media(max-width:899px){
+  .map-expanded-actions{
+    grid-template-columns:1fr 1fr 1fr !important;
+    gap:8px !important;
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .map-expanded-actions .btn{
+    min-height:50px !important;
+    padding:10px 9px !important;
+    font-size:9px !important;
+    letter-spacing:.045em !important;
+    border-radius:999px !important;
+  }
+
+  #centerCurrentStop{
+    grid-column:auto !important;
+  }
+
+  #expandedNextStop{
+    grid-column:auto !important;
+  }
+
+  #expandedEmergencyMaps{
+    grid-column:auto !important;
+  }
+}
+
+@media(max-width:380px){
+  .map-expanded-actions .btn{
+    font-size:8.4px !important;
+    padding-inline:7px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2701,7 +2755,8 @@ img{display:block;max-width:100%}
   </div>
   <div class="map-expanded-view" id="expandedRouteMap"></div>
   <div class="map-expanded-actions">
-    <button class="btn dark" id="centerCurrentStop" type="button">Volver al monumento</button>
+    <button class="btn dark" id="centerCurrentStop" type="button">Volver</button>
+    <button class="btn primary" id="expandedNextStop" type="button">Siguiente parada</button>
     <a class="btn ghost" id="expandedEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
   </div>
 </div>
@@ -3112,6 +3167,9 @@ img{display:block;max-width:100%}
     document.querySelectorAll(".step").forEach((el, idx) => el.classList.toggle("is-active", idx === activeStop));
     updateMapCopy();
     renderGoogleMaps("next");
+      if($("expandedNextStop")){
+      $("expandedNextStop").textContent = activeStop >= selectedRoute.stops.length - 1 ? "Ver extras" : "Siguiente parada";
+    }
   }
 
   function goToStop(idx){
@@ -3202,6 +3260,10 @@ img{display:block;max-width:100%}
   });
   $("closeExpandedMap").addEventListener("click", closeExpandedMap);
   $("centerCurrentStop").addEventListener("click", closeExpandedMap);
+  $("expandedNextStop").addEventListener("click", () => {
+    closeExpandedMap();
+    next();
+  });
   document.addEventListener("keydown", (event) => {
     if(event.key === "Escape") closeExpandedMap();
   });
