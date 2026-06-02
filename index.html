@@ -1,0 +1,3061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qué ver en Zamora según el tiempo que tengas | Abrir Google Maps integrado</title>
+<meta name="description" content="Guía móvil visual para recorrer Zamora por escenas, con rutas según el tiempo disponible y acceso directo a Abrir Google Maps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Paleta Zamora: piedra románica, teja, vino de Toro, Duero y sombra de muralla */
+  --paper:#eadcc8;
+  --paper2:#f7efe4;
+  --ink:#1b120d;
+  --muted:#6d5b4a;
+  --wine:#7e1d17;
+  --wine2:#5f130f;
+  --gold:#b98238;
+  --duero:#3f6572;
+  --tile:#9f4b2e;
+  --olive:#59684a;
+  --night:#120b07;
+  --line:rgba(27,18,13,.13);
+  --glass:rgba(247,239,228,.84);
+  --serif:"DM Serif Display", Georgia, serif;
+  --sans:"Instrument Sans", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+  --max:1180px;
+  --gutter:clamp(16px,4vw,36px);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--paper)}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--sans);
+  background:
+    radial-gradient(circle at 12% -6%,rgba(185,130,56,.24),transparent 28%),
+    radial-gradient(circle at 92% 8%,rgba(63,101,114,.16),transparent 32%),
+    radial-gradient(circle at 82% 78%,rgba(159,75,46,.10),transparent 34%),
+    linear-gradient(180deg,#f4e7d5 0%,var(--paper) 45%,#d8c2a5 100%);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(95,19,15,.038) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(27,18,13,.045) 1px,transparent 1px);
+  background-size:76px 76px;
+  opacity:.18;
+  mask-image:linear-gradient(180deg,#000 0%,transparent 70%);
+}
+body::after{
+  content:"";
+  position:fixed;
+  left:-20vw;
+  bottom:-20vh;
+  width:140vw;
+  height:42vh;
+  pointer-events:none;
+  z-index:0;
+  opacity:.16;
+  background:
+    radial-gradient(58% 100% at 50% 35%,rgba(63,101,114,.50),transparent 62%),
+    linear-gradient(90deg,transparent,rgba(89,104,74,.16),transparent);
+  filter:blur(34px);
+  transform:rotate(-4deg);
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+img{display:block;max-width:100%}
+.wrap{width:min(var(--max),calc(100% - var(--gutter)*2));margin-inline:auto;position:relative;z-index:1}
+.skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;z-index:999;background:#fff;padding:12px;border:2px solid #000}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:90;
+  background:rgba(234,220,200,.76);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(21,17,13,.08);
+}
+.nav{min-height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.brand-mark{width:34px;height:34px;border-radius:50%;background:var(--wine);color:white;display:grid;place-items:center;font-family:var(--serif);font-size:24px}
+.nav-actions{display:flex;align-items:center;gap:6px}
+.nav-actions a,.nav-actions button{border:0;background:transparent;padding:9px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.nav-actions .primary{background:var(--ink);color:white}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--wine)}
+.kicker::before{content:"";width:22px;height:1px;background:currentColor}
+.btn{
+  min-height:50px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:13px 17px;
+  border-radius:999px;
+  border:1px solid transparent;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.055em;
+  cursor:pointer;
+  transition:transform .22s var(--ease),background .22s var(--ease),border-color .22s var(--ease),color .22s var(--ease)
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--wine);color:white;border-color:var(--wine)}
+.btn.primary:hover{background:var(--wine2);border-color:var(--wine2)}
+.btn.dark{background:var(--ink);color:white;border-color:var(--ink)}
+.btn.light{background:white;color:var(--ink);border-color:rgba(255,255,255,.25)}
+.btn.outline{background:rgba(255,255,255,.08);color:white;border-color:rgba(255,255,255,.30);backdrop-filter:blur(12px)}
+.btn.ghost{background:white;color:var(--ink);border-color:var(--line)}
+.hero{padding:0 0 18px}
+.hero-card{
+  position:relative;
+  min-height:calc(100svh - 58px);
+  overflow:hidden;
+  border-radius:0 0 30px 30px;
+  background:var(--night);
+  box-shadow:0 24px 80px rgba(21,17,13,.18);
+}
+.hero-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    linear-gradient(180deg,rgba(18,11,7,.06),rgba(18,11,7,.38) 40%,rgba(18,11,7,.88) 100%),
+    radial-gradient(circle at 80% 16%,rgba(185,130,56,.22),transparent 28%),
+    radial-gradient(circle at 12% 86%,rgba(126,29,23,.20),transparent 30%);
+}
+.hero-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.05);filter:saturate(.96) contrast(1.03)}
+.hero-content{position:relative;z-index:2;min-height:calc(100svh - 58px);display:grid;align-content:end;gap:17px;padding:clamp(22px,6vw,54px);color:white}
+.hero h1{margin:0;max-width:9.2ch;font-family:var(--serif);font-weight:400;font-size:clamp(50px,15vw,116px);line-height:.86;letter-spacing:-.035em;text-wrap:balance}
+.hero-lead{margin:0;max-width:36rem;color:rgba(255,255,255,.86);font-size:clamp(17px,3.2vw,21px);line-height:1.42}
+.hero-actions{display:grid;grid-template-columns:1fr;gap:9px;max-width:420px}
+.selector{padding:18px 0 4px}
+.selector-panel{background:var(--glass);border:1px solid rgba(21,17,13,.08);border-radius:28px;padding:18px;backdrop-filter:blur(18px);box-shadow:0 18px 54px rgba(21,17,13,.07)}
+.selector-head{display:grid;gap:8px;margin-bottom:14px}
+.selector-head h2{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(34px,9vw,58px);line-height:.9;letter-spacing:-.02em}
+.selector-head p{margin:0;color:var(--muted);line-height:1.48}
+.route-options{display:grid;gap:9px}
+.route-option{position:relative;width:100%;border:1px solid rgba(21,17,13,.08);border-radius:22px;background:white;padding:16px;text-align:left;cursor:pointer;overflow:hidden;transition:.22s transform var(--ease),.22s background var(--ease),.22s color var(--ease)}
+.route-option:hover{transform:translateY(-1px)}
+.route-option.is-active{background:linear-gradient(135deg,var(--wine2),var(--ink));color:white}
+.route-option::after{content:"";position:absolute;right:16px;top:50%;width:9px;height:9px;border-radius:50%;background:#d7c5af;transform:translateY(-50%)}
+.route-option.is-active::after{background:var(--wine)}
+.route-option em{display:block;font-style:normal;font-family:var(--mono);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--wine)}
+.route-option.is-active em{color:var(--gold)}
+.route-option strong{display:block;margin-top:7px;font-family:var(--serif);font-size:25px;line-height:.96;font-weight:400}
+.route-option span{display:block;margin-top:6px;max-width:34ch;color:var(--muted);font-size:14px;line-height:1.35}
+.route-option.is-active span{color:rgba(255,255,255,.72)}
+.route-option small{display:block;margin-top:8px;color:#8c7d6d;font-size:11px;line-height:1.25}
+.route-option.is-active small{color:rgba(255,255,255,.52)}
+.story-intro{padding:22px 0 14px}
+.story-intro h2{margin:8px 0 0;font-family:var(--serif);font-weight:400;font-size:clamp(38px,10vw,68px);line-height:.88;letter-spacing:-.025em}
+.story-intro p{margin:10px 0 0;max-width:58ch;color:var(--muted);line-height:1.5}
+.tour{position:relative;z-index:1;display:grid;gap:14px}
+.mobile-hud{
+  position:sticky;
+  top:64px;
+  z-index:60;
+  margin-bottom:12px;
+  background:var(--glass);
+  border:1px solid rgba(21,17,13,.08);
+  border-radius:20px;
+  backdrop-filter:blur(18px);
+  box-shadow:0 12px 34px rgba(21,17,13,.10);
+  padding:12px;
+}
+.mobile-hud-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.mobile-hud span{display:block;font-family:var(--mono);color:var(--wine);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.mobile-hud strong{display:block;margin-top:4px;font-family:var(--serif);font-size:24px;font-weight:400;line-height:.94}
+.mobile-hud small{font-family:var(--mono);color:#817568;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.progress{height:6px;border-radius:999px;overflow:hidden;background:#d8c5ab;margin-top:10px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--wine),var(--tile),var(--gold));border-radius:999px;transition:width .34s var(--ease)}
+.story{scroll-snap-type:y mandatory}
+.step{
+  min-height:100svh;
+  position:relative;
+  overflow:hidden;
+  border-radius:30px;
+  background:var(--night);
+  color:white;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  margin-bottom:14px;
+  box-shadow:0 24px 72px rgba(21,17,13,.18);
+  isolation:isolate;
+}
+.step::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:
+    linear-gradient(180deg,rgba(18,11,7,.06),rgba(18,11,7,.30) 36%,rgba(18,11,7,.90) 100%),
+    radial-gradient(circle at 72% 20%,rgba(185,130,56,.16),transparent 22%),
+    radial-gradient(circle at 12% 82%,rgba(63,101,114,.16),transparent 30%);
+}
+.step img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.10);filter:saturate(.96) contrast(1.02);transition:transform .9s var(--ease),filter .6s var(--ease)}
+.step.is-active img{transform:scale(1.015);filter:saturate(1.02) contrast(1.04)}
+.step-number{position:absolute;z-index:2;right:-4vw;top:10svh;font-family:var(--serif);font-size:clamp(142px,42vw,360px);line-height:.75;color:rgba(255,255,255,.13);letter-spacing:-.08em;pointer-events:none;transform:translateY(18px);transition:transform .7s var(--ease)}
+.step.is-active .step-number{transform:translateY(0)}
+.step-inner{position:relative;z-index:3;min-height:100svh;display:grid;align-content:end;padding:22px 18px 96px}
+.step-content{max-width:680px;display:grid;gap:15px;transform:translateY(18px);opacity:.85;transition:transform .7s var(--ease),opacity .7s var(--ease)}
+.step.is-active .step-content{transform:translateY(0);opacity:1}
+.step-overline{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.78);font-family:var(--mono);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+.step-overline::before{content:"";width:24px;height:1px;background:rgba(255,255,255,.55)}
+.step h3{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(40px,12vw,86px);line-height:.88;letter-spacing:-.03em;text-wrap:balance}
+.step-look{margin:0;max-width:24ch;color:rgba(255,255,255,.88);font-size:clamp(18px,4.8vw,24px);line-height:1.26}
+.step-actions-text{display:grid;gap:10px;margin-top:4px}
+.action-line{padding:0 0 0 14px;border-left:2px solid rgba(255,255,255,.28)}
+.action-line span{display:block;margin-bottom:4px;color:#d2a45f;font-family:var(--mono);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em}
+.action-line p{margin:0;color:rgba(255,255,255,.86);font-size:15px;line-height:1.45}
+.details{margin-top:3px}
+.details summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.82);font-family:var(--mono);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.details summary::-webkit-details-marker{display:none}
+.details summary::before{content:"+";width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.12)}
+.details[open] summary::before{content:"−"}
+.details p{margin:10px 0 0;max-width:48ch;color:rgba(255,255,255,.74);font-size:14px;line-height:1.42}
+.inline-actions{display:none}
+.bottom-rail{position:fixed;left:0;right:0;bottom:0;z-index:90;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;background:rgba(234,220,200,.88);border-top:1px solid rgba(21,17,13,.08);backdrop-filter:blur(18px)}
+.bottom-rail .btn{width:100%;min-height:50px}
+.extras{padding:18px 0 110px}
+.extras-grid{display:grid;gap:14px}
+.info-block{background:var(--glass);border:1px solid rgba(21,17,13,.08);border-radius:28px;padding:20px;backdrop-filter:blur(16px);box-shadow:0 14px 40px rgba(21,17,13,.06)}
+.info-block h2{margin:0 0 14px;font-family:var(--serif);font-weight:400;font-size:36px;line-height:.92}
+.info-item{display:grid;gap:4px;padding:13px 0;border-top:1px solid rgba(21,17,13,.08)}
+.info-item:first-of-type{border-top:0;padding-top:0}
+.info-item strong{font-family:var(--serif);font-size:23px;font-weight:400}
+.info-item span{color:var(--muted);line-height:1.45}
+.desktop-side{display:none}
+
+.route-brief{
+  margin:0 0 14px;
+  background:linear-gradient(180deg,rgba(247,239,228,.90),rgba(234,220,200,.80));
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:28px;
+  padding:18px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 14px 42px rgba(27,18,13,.08);
+}
+.route-brief-label{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.route-brief h3{
+  margin:7px 0 0;
+  font-family:var(--serif);
+  font-size:32px;
+  line-height:.92;
+  font-weight:400;
+}
+.route-brief p{
+  margin:10px 0 0;
+  color:var(--muted);
+  line-height:1.45;
+}
+.brief-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+.brief-chip{
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  border-radius:999px;
+  padding:8px 11px;
+  background:rgba(255,253,249,.70);
+  border:1px solid rgba(27,18,13,.10);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:var(--ink);
+}
+.brief-chip strong{
+  color:var(--wine);
+  margin-right:5px;
+}
+.guide-note{
+  min-height:58svh;
+  display:grid;
+  place-items:center;
+  padding:34px 20px;
+  margin:0 0 14px;
+  scroll-snap-align:center;
+  border-radius:30px;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(185,130,56,.16),transparent 26%),
+    linear-gradient(135deg,rgba(247,239,228,.94),rgba(216,194,165,.86));
+  border:1px solid rgba(27,18,13,.10);
+  box-shadow:0 18px 54px rgba(27,18,13,.08);
+  color:var(--ink);
+}
+.guide-note-inner{
+  max-width:560px;
+}
+.guide-note span{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.guide-note span::before{
+  content:"";
+  width:26px;
+  height:1px;
+  background:currentColor;
+}
+.guide-note strong{
+  display:block;
+  margin-top:12px;
+  font-family:var(--serif);
+  font-size:clamp(34px,8vw,60px);
+  line-height:.9;
+  font-weight:400;
+  letter-spacing:-.02em;
+}
+.guide-note p{
+  margin:14px 0 0;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.5;
+}
+.stop-decision{
+  color:rgba(255,255,255,.82);
+  font-size:14px;
+  line-height:1.42;
+  border-left:2px solid rgba(210,164,95,.72);
+  padding-left:12px;
+}
+.stop-decision span{
+  display:block;
+  margin-bottom:4px;
+  color:#d2a45f;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.stop-decision p{
+  margin:0;
+}
+.secret-mission{
+  margin-top:2px;
+  padding:13px 14px;
+  border-radius:18px;
+  background:rgba(126,29,23,.30);
+  border:1px solid rgba(210,164,95,.36);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.secret-mission span{
+  display:block;
+  margin-bottom:6px;
+  color:#d2a45f;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.secret-mission p{
+  margin:0;
+  color:rgba(255,255,255,.88);
+  font-size:15px;
+  line-height:1.42;
+}
+
+
+/* Extras útiles: no son relleno, son decisiones para el visitante */
+.extras-utility{
+  display:grid;
+  gap:14px;
+}
+.extra-hero{
+  background:
+    linear-gradient(135deg,rgba(95,19,15,.98),rgba(27,18,13,.96)),
+    radial-gradient(circle at 80% 10%,rgba(185,130,56,.18),transparent 28%);
+  color:white;
+  border-radius:30px;
+  padding:24px;
+  box-shadow:0 18px 54px rgba(27,18,13,.16);
+}
+.extra-hero span{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#d2a45f;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.extra-hero span::before{
+  content:"";
+  width:24px;
+  height:1px;
+  background:currentColor;
+}
+.extra-hero h2{
+  margin:12px 0 0;
+  max-width:9ch;
+  font-family:var(--serif);
+  font-size:clamp(42px,10vw,76px);
+  line-height:.88;
+  font-weight:400;
+  letter-spacing:-.03em;
+}
+.extra-hero p{
+  margin:14px 0 0;
+  max-width:54ch;
+  color:rgba(255,255,255,.76);
+  line-height:1.5;
+}
+.extra-grid{
+  display:grid;
+  gap:14px;
+}
+.extra-card{
+  background:rgba(247,239,228,.86);
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:28px;
+  padding:20px;
+  backdrop-filter:blur(16px);
+  box-shadow:0 14px 42px rgba(27,18,13,.07);
+}
+.extra-card.dark{
+  background:linear-gradient(135deg,rgba(27,18,13,.96),rgba(95,19,15,.92));
+  color:white;
+}
+.extra-card h3{
+  margin:0;
+  font-family:var(--serif);
+  font-size:34px;
+  line-height:.92;
+  font-weight:400;
+}
+.extra-card p{
+  margin:10px 0 0;
+  color:var(--muted);
+  line-height:1.48;
+}
+.extra-card.dark p{
+  color:rgba(255,255,255,.74);
+}
+.extra-options{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.extra-option{
+  display:grid;
+  gap:8px;
+  padding:14px 0;
+  border-top:1px solid rgba(27,18,13,.10);
+}
+.extra-card.dark .extra-option{
+  border-top-color:rgba(255,255,255,.16);
+}
+.extra-option:first-child{border-top:0;padding-top:0}
+.extra-option header{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+}
+.extra-option strong{
+  font-size:20px;
+  line-height:1.05;
+}
+.extra-option em{
+  flex:0 0 auto;
+  font-style:normal;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.extra-card.dark .extra-option em{
+  color:#d2a45f;
+}
+.extra-option span{
+  color:var(--muted);
+  line-height:1.42;
+}
+.extra-card.dark .extra-option span{
+  color:rgba(255,255,255,.75);
+}
+.extra-option small{
+  color:#8a7a67;
+  line-height:1.35;
+}
+.extra-card.dark .extra-option small{
+  color:rgba(255,255,255,.56);
+}
+.extra-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:10px;
+}
+.extra-actions .btn{
+  min-height:42px;
+  padding:10px 13px;
+}
+.decision-list{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+.decision-row{
+  display:grid;
+  gap:4px;
+  padding:13px 0;
+  border-top:1px solid rgba(27,18,13,.10);
+}
+.decision-row:first-child{border-top:0;padding-top:0}
+.decision-row strong{
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.decision-row span{
+  color:var(--ink);
+  line-height:1.42;
+}
+.extra-warning{
+  margin-top:16px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(126,29,23,.08);
+  border:1px solid rgba(126,29,23,.16);
+  color:var(--ink);
+  line-height:1.45;
+}
+.extra-warning strong{
+  color:var(--wine);
+}
+@media(min-width:900px){
+  .extras-utility{gap:16px}
+  .extra-grid{grid-template-columns:1fr 1fr}
+  .extra-card.wide{grid-column:1/-1}
+  .extra-hero{padding:32px}
+}
+
+@media(min-width:900px){
+  .nav{min-height:68px}
+  .hero{padding-top:24px}
+  .hero-card{border-radius:34px;min-height:calc(100svh - 116px)}
+  .hero-content{min-height:calc(100svh - 116px);padding:54px}
+  .hero h1{font-size:clamp(72px,8vw,122px)}
+  .hero-actions{grid-template-columns:auto auto}
+  .selector-panel{padding:24px}
+  .route-options{grid-template-columns:repeat(4,1fr)}
+  .route-option{padding:18px}
+  .tour{grid-template-columns:320px minmax(0,1fr);align-items:start}
+  .mobile-hud{display:none}
+  .desktop-side{display:block;position:sticky;top:88px;background:var(--glass);border:1px solid rgba(21,17,13,.08);border-radius:28px;backdrop-filter:blur(18px);box-shadow:0 16px 44px rgba(21,17,13,.08);padding:20px}
+  .desktop-side .route-title{font-family:var(--serif);font-size:34px;line-height:.94}
+  .side-meta{margin-top:10px;color:var(--muted);line-height:1.4;font-size:14px}
+  .side-stops{display:grid;gap:8px;margin-top:16px}
+  .side-stop{width:100%;border:1px solid rgba(21,17,13,.08);background:white;border-radius:999px;display:grid;grid-template-columns:30px 1fr;align-items:center;gap:9px;padding:8px 10px;text-align:left;cursor:pointer;transition:.2s background var(--ease),.2s color var(--ease)}
+  .side-stop i{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:#e1d0b8;color:var(--ink);font-family:var(--mono);font-size:10px;font-style:normal;font-weight:800}
+  .side-stop strong{font-size:13px;line-height:1.12}
+  .side-stop.is-active{background:linear-gradient(135deg,var(--wine2),var(--ink));color:white}
+  .side-stop.is-active i{background:var(--wine);color:white}
+  .desktop-side .progress{margin-top:16px}
+  .side-actions{display:grid;gap:8px;margin-top:16px}
+  .story{display:grid;gap:16px}
+  .step{min-height:92svh;border-radius:34px;margin-bottom:0}
+  .step-inner{min-height:92svh;padding:34px 36px 42px}
+  .step-content{max-width:760px}
+  .step h3{font-size:clamp(64px,7vw,104px)}
+  .step-look{font-size:25px}
+  .step-actions-text{grid-template-columns:1fr 1fr;max-width:760px}
+  .inline-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .bottom-rail{display:none}
+  .extras{padding-bottom:90px}
+  .extras-grid{grid-template-columns:1fr 1fr}
+  .route-brief{padding:22px;margin-bottom:16px}
+  .route-brief h3{font-size:38px}
+  .guide-note{min-height:46svh;border-radius:34px;margin-bottom:16px}
+}
+
+
+.action-line p,
+.stop-decision p,
+.secret-mission p{
+  max-width:44ch;
+}
+
+
+/* Mapa interno sin dependencias: siempre visible y sincronizado con la ruta */
+.internal-map-card{
+  background:rgba(247,239,228,.88);
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 12px 34px rgba(27,18,13,.10);
+  backdrop-filter:blur(16px);
+}
+.internal-map-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 12px 10px;
+}
+.internal-map-head span{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.internal-map-head strong{
+  display:block;
+  margin-top:4px;
+  font-family:var(--serif);
+  font-size:23px;
+  font-weight:400;
+  line-height:.94;
+}
+.internal-map-head small{
+  color:#806f5d;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  text-align:right;
+  white-space:nowrap;
+}
+.internal-map-view{
+  width:100%;
+  height:178px;
+  background:#d8c2a5;
+}
+.mobile-internal-map{
+  position:sticky;
+  top:158px;
+  z-index:50;
+  margin:-2px 0 12px;
+}
+.desktop-internal-map{
+  margin-top:14px;
+}
+.desktop-internal-map .internal-map-view{
+  height:250px;
+}
+.internal-map-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:10px 12px 12px;
+}
+.internal-map-actions .btn{
+  min-height:40px;
+  padding:9px 11px;
+}
+.route-leg{
+  margin:10px 12px 0;
+  padding:12px;
+  border-radius:18px;
+  background:rgba(255,253,249,.72);
+  border:1px solid rgba(27,18,13,.08);
+}
+.route-leg span{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.route-leg strong{
+  display:block;
+  margin-top:5px;
+  font-size:14px;
+  line-height:1.25;
+}
+.route-leg p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+.map-expanded{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:none;
+  background:rgba(18,11,7,.76);
+  backdrop-filter:blur(12px);
+  padding:12px;
+}
+.map-expanded.is-open{
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:10px;
+}
+.map-expanded-head,
+.map-expanded-actions{
+  background:rgba(247,239,228,.95);
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:20px;
+  padding:12px;
+}
+.map-expanded-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+}
+.map-expanded-head span{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.map-expanded-head strong{
+  display:block;
+  margin-top:4px;
+  font-family:var(--serif);
+  font-size:28px;
+  font-weight:400;
+  line-height:.92;
+}
+.map-close{
+  border:0;
+  border-radius:999px;
+  width:38px;
+  height:38px;
+  background:var(--ink);
+  color:#fff;
+  font-family:var(--mono);
+  font-weight:800;
+  cursor:pointer;
+}
+.map-expanded-view{
+  min-height:0;
+  border-radius:22px;
+  overflow:hidden;
+  background:#d8c2a5;
+}
+.map-expanded-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.route-map-svg{
+  width:100%;
+  height:100%;
+  display:block;
+  background:
+    radial-gradient(circle at 80% 12%,rgba(185,130,56,.16),transparent 26%),
+    linear-gradient(180deg,#eadcc8,#d8c2a5);
+}
+.route-map-svg text{
+  font-family:var(--mono);
+  font-weight:800;
+}
+.route-map-svg .route-pending{
+  fill:none;
+  stroke:#bca485;
+  stroke-width:8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.route-map-svg .route-done{
+  fill:none;
+  stroke:#7e1d17;
+  stroke-width:9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.route-map-svg .route-next{
+  fill:none;
+  stroke:#9f4b2e;
+  stroke-width:8;
+  stroke-dasharray:10 12;
+  stroke-linecap:round;
+}
+.route-map-svg .river{
+  fill:none;
+  stroke:#3f6572;
+  stroke-width:16;
+  stroke-linecap:round;
+  opacity:.22;
+}
+.route-map-svg .marker{
+  fill:#f7efe4;
+  stroke:#1b120d;
+  stroke-width:2;
+}
+.route-map-svg .marker.done{
+  fill:#7e1d17;
+  stroke:#fff;
+}
+.route-map-svg .marker.active{
+  fill:#9f4b2e;
+  stroke:#fff;
+  stroke-width:4;
+}
+.route-map-svg .marker.next{
+  fill:#d2a45f;
+  stroke:#1b120d;
+}
+.route-map-svg .label{
+  fill:#1b120d;
+  font-size:10px;
+}
+.route-map-svg .label.light{
+  fill:#fff;
+}
+.route-map-svg .north{
+  fill:#7e1d17;
+  font-size:10px;
+  opacity:.9;
+}
+@media(min-width:900px){
+  .mobile-internal-map{display:none}
+}
+@media(max-width:899px){
+  .desktop-internal-map{display:none}
+  .mobile-hud{border-radius:20px 20px 0 0;margin-bottom:0}
+  .mobile-internal-map{border-radius:0 0 20px 20px}
+}
+
+@media(max-width:640px){
+  .nav-actions a{display:none}
+  .brand span:last-child{font-size:10px}
+  .hero .wrap{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .step img,.step-number,.step-content{transform:none!important}
+}
+
+/* V10 · full-bleed + viewport mobile */
+@media(max-width:899px){
+  :root{
+    --gutter:18px;
+  }
+
+  .hero{
+    padding-top:0;
+  }
+
+  .hero .wrap,
+  .tour.wrap{
+    width:100%;
+    max-width:none;
+  }
+
+  .hero-card{
+    width:100vw;
+    min-height:calc(100vh - 58px);
+    min-height:calc(100svh - 58px);
+    border-radius:0 0 32px 32px;
+    margin-inline:0;
+  }
+
+  .hero-content{
+    min-height:calc(100vh - 58px);
+    min-height:calc(100svh - 58px);
+    padding:24px var(--gutter) calc(30px + env(safe-area-inset-bottom));
+  }
+
+  .selector .wrap,
+  .story-intro .wrap,
+  .extras .wrap{
+    width:min(100% - calc(var(--gutter)*2), var(--max));
+  }
+
+  .selector-panel{
+    border-radius:26px;
+  }
+
+  .mobile-hud{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    top:58px;
+    border-left:0;
+    border-right:0;
+    border-radius:0;
+    box-shadow:0 10px 30px rgba(27,18,13,.08);
+  }
+
+  .mobile-hud-row{
+    padding-inline:var(--gutter);
+  }
+
+  .mobile-hud .progress{
+    margin-left:var(--gutter);
+    margin-right:var(--gutter);
+  }
+
+  .mobile-internal-map{
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    top:137px;
+    border-left:0;
+    border-right:0;
+    border-radius:0 0 26px 26px;
+  }
+
+  .internal-map-head,
+  .route-leg,
+  .internal-map-actions{
+    margin-left:var(--gutter);
+    margin-right:var(--gutter);
+  }
+
+  .internal-map-head{
+    padding-left:0;
+    padding-right:0;
+  }
+
+  .internal-map-view{
+    height:24vh;
+    min-height:158px;
+    max-height:230px;
+  }
+
+  .story{
+    scroll-snap-type:y mandatory;
+  }
+
+  .step{
+    width:100vw;
+    min-height:100vh;
+    min-height:100svh;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    margin-bottom:0;
+    border-radius:0;
+    box-shadow:none;
+  }
+
+  .step-inner{
+    min-height:100vh;
+    min-height:100svh;
+    padding:24px var(--gutter) calc(112px + env(safe-area-inset-bottom));
+  }
+
+  .step h3{
+    max-width:9.5ch;
+  }
+
+  .step-look{
+    max-width:25ch;
+  }
+
+  .step-actions-text,
+  .stop-decision,
+  .secret-mission,
+  .details{
+    max-width:560px;
+  }
+
+  .step-number{
+    top:9vh;
+    right:-8vw;
+    font-size:clamp(152px,48vw,330px);
+  }
+
+  .guide-note{
+    width:100vw;
+    min-height:78vh;
+    min-height:78svh;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    margin-bottom:0;
+    border-left:0;
+    border-right:0;
+    border-radius:0;
+    padding:34px var(--gutter);
+  }
+
+  .route-brief{
+    width:calc(100% - var(--gutter)*2);
+    margin-left:var(--gutter);
+    margin-right:var(--gutter);
+  }
+
+  .map-expanded{
+    padding:0;
+  }
+
+  .map-expanded-head{
+    border-radius:0 0 20px 20px;
+    border-left:0;
+    border-right:0;
+  }
+
+  .map-expanded-view{
+    border-radius:0;
+  }
+
+  .map-expanded-actions{
+    border-radius:20px 20px 0 0;
+    border-left:0;
+    border-right:0;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .bottom-rail{
+    padding:12px var(--gutter) calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .extras{
+    padding-top:0;
+  }
+}
+
+@media(min-width:900px){
+  .hero .wrap{
+    width:min(1320px, calc(100% - var(--gutter)*2));
+  }
+
+  .hero-card{
+    min-height:calc(100vh - 116px);
+    min-height:calc(100svh - 116px);
+  }
+
+  .hero-content{
+    min-height:calc(100vh - 116px);
+    min-height:calc(100svh - 116px);
+  }
+
+  .step{
+    min-height:92vh;
+    min-height:92svh;
+  }
+
+  .step-inner{
+    min-height:92vh;
+    min-height:92svh;
+  }
+}
+
+
+/* V11 · Abrir Google Maps integrado */
+.internal-map-card{
+  background:rgba(247,239,228,.92);
+  border:1px solid rgba(27,18,13,.10);
+}
+.internal-map-view{
+  position:relative;
+  overflow:hidden;
+  background:#d8c2a5;
+}
+.google-map-frame{
+  width:100%;
+  height:100%;
+  border:0;
+  display:block;
+  background:#d8c2a5;
+}
+.map-mode-tabs{
+  display:flex;
+  gap:6px;
+  padding:0 12px 10px;
+}
+.map-mode-tabs button{
+  flex:1;
+  min-height:34px;
+  border:1px solid rgba(27,18,13,.12);
+  border-radius:999px;
+  background:rgba(255,253,249,.72);
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  cursor:pointer;
+}
+.map-mode-tabs button.is-active{
+  background:var(--wine);
+  color:white;
+  border-color:var(--wine);
+}
+.map-open-native{
+  display:none;
+}
+@media(max-width:899px){
+  .internal-map-view{
+    height:31vh;
+    min-height:210px;
+    max-height:320px;
+  }
+  .mobile-internal-map{
+    top:137px;
+  }
+  .route-leg{
+    background:rgba(255,253,249,.84);
+  }
+}
+@media(min-width:900px){
+  .desktop-internal-map .internal-map-view{
+    height:310px;
+  }
+}
+
+
+/* V12 · corrección Google Maps móvil */
+.google-map-frame{
+  background:#e5e0d8;
+}
+@media(max-width:899px){
+  .internal-map-view{
+    height:26vh;
+    min-height:176px;
+    max-height:240px;
+  }
+  .map-head strong{
+    font-size:21px;
+  }
+  .route-leg{
+    margin-top:8px;
+    padding:11px;
+  }
+  .route-leg strong{
+    font-size:13px;
+  }
+  .route-leg p{
+    font-size:12.5px;
+  }
+  .internal-map-actions .btn{
+    min-height:38px;
+    font-size:9px;
+    padding:8px 9px;
+  }
+  .map-mode-tabs{
+    padding:8px 12px 0;
+  }
+  .map-mode-tabs button{
+    min-height:32px;
+    font-size:9px;
+  }
+}
+
+
+/* V13 · corrección de visión responsive: el mapa no puede comerse la guía */
+@media(max-width:899px){
+  /* El flujo móvil debe priorizar escena + lectura. El mapa es apoyo compacto. */
+  .tour.wrap{
+    width:100%;
+    max-width:none;
+  }
+
+  .mobile-hud{
+    top:58px;
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+    margin-bottom:0;
+    padding:10px 0;
+  }
+
+  .mobile-hud-row{
+    padding-inline:18px;
+  }
+
+  .mobile-hud strong{
+    font-size:21px;
+    line-height:.96;
+  }
+
+  .mobile-hud .progress{
+    margin:8px 18px 0;
+  }
+
+  .mobile-internal-map{
+    position:sticky;
+    top:134px;
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    z-index:49;
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+    box-shadow:0 8px 24px rgba(27,18,13,.08);
+  }
+
+  .mobile-internal-map .internal-map-head{
+    padding:8px 18px 6px;
+  }
+
+  .mobile-internal-map .internal-map-head strong{
+    font-size:16px;
+    line-height:1;
+  }
+
+  .mobile-internal-map .internal-map-head span{
+    font-size:9px;
+  }
+
+  .mobile-internal-map .internal-map-head small{
+    font-size:9px;
+  }
+
+  .mobile-internal-map .internal-map-view{
+    height:118px;
+    min-height:118px;
+    max-height:118px;
+  }
+
+  .mobile-internal-map .map-mode-tabs{
+    display:none;
+  }
+
+  .mobile-internal-map .route-leg{
+    display:none;
+  }
+
+  .mobile-internal-map .internal-map-actions{
+    display:none;
+  }
+
+  .story{
+    scroll-snap-type:y mandatory;
+  }
+
+  .step{
+    width:100vw;
+    min-height:100vh;
+    min-height:100svh;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    margin-bottom:0;
+    border-radius:0;
+  }
+
+  .step-inner{
+    min-height:100vh;
+    min-height:100svh;
+    padding:24px 18px calc(118px + env(safe-area-inset-bottom));
+  }
+
+  .step-content{
+    max-width:100%;
+    gap:12px;
+  }
+
+  .step h3{
+    font-size:clamp(39px,12vw,66px);
+    max-width:10ch;
+  }
+
+  .step-look{
+    font-size:18px;
+    max-width:24ch;
+  }
+
+  .step-actions-text{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+
+  .action-line p,
+  .stop-decision p,
+  .secret-mission p{
+    font-size:14px;
+    line-height:1.38;
+    max-width:36ch;
+  }
+
+  .stop-decision,
+  .secret-mission{
+    padding-top:0;
+    padding-bottom:0;
+  }
+
+  .details p{
+    font-size:13px;
+  }
+
+  .step-number{
+    top:10vh;
+    right:-10vw;
+    font-size:clamp(140px,45vw,310px);
+  }
+
+  .guide-note{
+    width:100vw;
+    min-height:72vh;
+    min-height:72svh;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+  }
+
+  .route-brief{
+    width:calc(100% - 36px);
+    margin-left:18px;
+    margin-right:18px;
+  }
+
+  .bottom-rail{
+    grid-template-columns:.86fr 1.14fr;
+    padding:10px 18px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .bottom-rail .btn{
+    min-height:48px;
+    font-size:10px;
+  }
+
+  .map-expanded{
+    padding:0;
+  }
+
+  .map-expanded-head{
+    border-radius:0 0 20px 20px;
+    border-left:0;
+    border-right:0;
+  }
+
+  .map-expanded-view{
+    border-radius:0;
+  }
+
+  .map-expanded-actions{
+    border-radius:20px 20px 0 0;
+    border-left:0;
+    border-right:0;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Tablet: evitar sidebar estrecha que aplasta mapa/contenido */
+@media(min-width:900px) and (max-width:1180px){
+  .tour{
+    grid-template-columns:280px minmax(0,1fr);
+  }
+
+  .desktop-side{
+    padding:14px;
+  }
+
+  .desktop-internal-map .internal-map-view{
+    height:230px;
+  }
+
+  .side-stop strong{
+    font-size:12px;
+  }
+
+  .step h3{
+    font-size:clamp(52px,6vw,86px);
+  }
+}
+
+/* Desktop amplio: la escena debe respirar */
+@media(min-width:1181px){
+  .tour.wrap{
+    width:min(1380px, calc(100% - var(--gutter)*2));
+  }
+
+  .tour{
+    grid-template-columns:360px minmax(0,1fr);
+  }
+
+  .desktop-internal-map .internal-map-view{
+    height:300px;
+  }
+}
+
+
+/* V14 · móvil correcto: la imagen manda, el mapa se abre como panel */
+@media(max-width:899px){
+  /* El mapa ya no ocupa espacio permanente en la pantalla móvil */
+  .mobile-internal-map{
+    display:none !important;
+  }
+
+  .tour.wrap{
+    width:100%;
+    max-width:none;
+  }
+
+  .mobile-hud{
+    top:58px;
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+    margin-bottom:0;
+    padding:10px 0;
+    z-index:70;
+  }
+
+  .mobile-hud-row{
+    padding-inline:18px;
+  }
+
+  .mobile-hud strong{
+    font-size:21px;
+    line-height:.96;
+  }
+
+  .mobile-hud .progress{
+    margin:8px 18px 0;
+  }
+
+  .story{
+    scroll-snap-type:y mandatory;
+  }
+
+  .step{
+    width:100vw;
+    min-height:calc(100vh - 132px);
+    min-height:calc(100svh - 132px);
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    margin-bottom:0;
+    border-radius:0;
+    scroll-margin-top:132px;
+  }
+
+  .step-inner{
+    min-height:calc(100vh - 132px);
+    min-height:calc(100svh - 132px);
+    padding:22px 18px calc(108px + env(safe-area-inset-bottom));
+    align-content:end;
+  }
+
+  .step-content{
+    max-width:100%;
+    gap:10px;
+  }
+
+  .step h3{
+    font-size:clamp(37px,11vw,62px);
+    line-height:.88;
+    max-width:10ch;
+  }
+
+  .step-look{
+    font-size:17px;
+    line-height:1.25;
+    max-width:24ch;
+  }
+
+  .step-actions-text{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+
+  .action-line{
+    padding-left:11px;
+  }
+
+  .action-line p,
+  .stop-decision p,
+  .secret-mission p{
+    font-size:13.8px;
+    line-height:1.34;
+    max-width:38ch;
+  }
+
+  .stop-decision{
+    padding-left:11px;
+  }
+
+  .details summary{
+    font-size:9px;
+  }
+
+  .details p{
+    font-size:12.8px;
+    line-height:1.34;
+  }
+
+  .step-number{
+    top:7vh;
+    right:-10vw;
+    font-size:clamp(128px,43vw,290px);
+  }
+
+  .bottom-rail{
+    grid-template-columns:.9fr 1.1fr;
+    padding:10px 18px calc(10px + env(safe-area-inset-bottom));
+    z-index:110;
+  }
+
+  .bottom-rail .btn{
+    min-height:48px;
+    font-size:10px;
+  }
+
+  /* El mapa integrado aparece como panel, no como bloque que empuja la imagen */
+  .map-expanded{
+    padding:0;
+    background:rgba(18,11,7,.80);
+  }
+
+  .map-expanded.is-open{
+    display:grid;
+    grid-template-rows:auto minmax(0,1fr) auto;
+  }
+
+  .map-expanded-head{
+    border-radius:0 0 20px 20px;
+    border-left:0;
+    border-right:0;
+  }
+
+  .map-expanded-view{
+    border-radius:0;
+    min-height:0;
+  }
+
+  .map-expanded-actions{
+    border-radius:20px 20px 0 0;
+    border-left:0;
+    border-right:0;
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .map-expanded-actions .btn{
+    min-height:48px;
+    font-size:10px;
+  }
+
+  .guide-note{
+    width:100vw;
+    min-height:72vh;
+    min-height:72svh;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+  }
+
+  .route-brief{
+    width:calc(100% - 36px);
+    margin-left:18px;
+    margin-right:18px;
+  }
+}
+
+/* Evita que el mapa de escritorio afecte a móvil o tablets estrechas */
+@media(min-width:900px) and (max-width:1180px){
+  .tour{
+    grid-template-columns:290px minmax(0,1fr);
+  }
+
+  .desktop-internal-map .internal-map-view{
+    height:230px;
+  }
+}
+
+@media(min-width:1181px){
+  .tour.wrap{
+    width:min(1380px, calc(100% - var(--gutter)*2));
+  }
+
+  .tour{
+    grid-template-columns:360px minmax(0,1fr);
+  }
+
+  .desktop-internal-map .internal-map-view{
+    height:300px;
+  }
+}
+
+
+/* V15 · sin cajas: secciones full-width */
+:root{
+  --content-pad: clamp(22px, 6vw, 72px);
+}
+
+/* Quitar sensación de tarjeta en zonas informativas */
+.route-brief,
+.guide-note,
+.extra-hero,
+.extra-card,
+.info-block{
+  box-shadow:none !important;
+}
+
+/* Brief de ruta como banda, no caja */
+.route-brief{
+  width:100vw !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+  border-radius:0 !important;
+  border-left:0 !important;
+  border-right:0 !important;
+  padding:28px var(--content-pad) !important;
+  background:linear-gradient(180deg,rgba(247,239,228,.92),rgba(234,220,200,.78)) !important;
+}
+
+/* Avisos de guía como transición editorial full-width */
+.guide-note{
+  width:100vw !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+  border-radius:0 !important;
+  border-left:0 !important;
+  border-right:0 !important;
+  box-shadow:none !important;
+  padding-left:var(--content-pad) !important;
+  padding-right:var(--content-pad) !important;
+}
+
+/* Extras dejan de ser cards */
+.extras{
+  padding:0 0 96px !important;
+}
+
+.extras .wrap,
+.extras-utility{
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+}
+
+.extras-utility,
+.extra-grid{
+  display:block !important;
+  gap:0 !important;
+}
+
+.extra-hero,
+.extra-card{
+  width:100vw !important;
+  margin-left:calc(50% - 50vw) !important;
+  margin-right:calc(50% - 50vw) !important;
+  border-radius:0 !important;
+  border-left:0 !important;
+  border-right:0 !important;
+  box-shadow:none !important;
+  padding:clamp(38px,7vw,86px) var(--content-pad) !important;
+}
+
+.extra-hero{
+  min-height:62vh;
+  min-height:62svh;
+  display:grid;
+  align-content:center;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(185,130,56,.18), transparent 26%),
+    linear-gradient(135deg,rgba(95,19,15,.98),rgba(27,18,13,.96)) !important;
+}
+
+.extra-hero h2{
+  max-width:8ch;
+}
+
+.extra-hero p{
+  max-width:680px;
+}
+
+.extra-card{
+  background:linear-gradient(180deg,rgba(247,239,228,.92),rgba(234,220,200,.80)) !important;
+  border-top:1px solid rgba(27,18,13,.10) !important;
+}
+
+.extra-card.dark{
+  background:
+    radial-gradient(circle at 85% 12%,rgba(185,130,56,.14),transparent 26%),
+    linear-gradient(135deg,rgba(27,18,13,.97),rgba(95,19,15,.94)) !important;
+  color:white;
+}
+
+.extra-card.wide{
+  background:linear-gradient(180deg,rgba(238,225,207,.92),rgba(221,201,172,.86)) !important;
+}
+
+.extra-card > h3,
+.extra-card > p,
+.extra-options,
+.decision-list,
+.extra-warning{
+  max-width:980px;
+}
+
+.extra-card > h3{
+  font-size:clamp(44px,8vw,82px) !important;
+  max-width:9ch;
+}
+
+.extra-card > p{
+  font-size:clamp(18px,2.3vw,24px);
+  line-height:1.42;
+}
+
+.extra-options{
+  margin-top:clamp(22px,4vw,40px) !important;
+}
+
+.extra-option{
+  display:grid !important;
+  grid-template-columns:minmax(0, 220px) minmax(0, 1fr);
+  gap:clamp(14px,3vw,42px) !important;
+  padding:clamp(20px,3.5vw,34px) 0 !important;
+}
+
+.extra-option header{
+  display:block !important;
+}
+
+.extra-option strong{
+  display:block;
+  font-family:var(--serif);
+  font-size:clamp(28px,4.6vw,48px) !important;
+  font-weight:400;
+  line-height:.92 !important;
+}
+
+.extra-option em{
+  display:block;
+  margin-top:10px;
+}
+
+.extra-option span{
+  display:block;
+  max-width:620px;
+  font-size:clamp(16px,2vw,20px);
+  line-height:1.42;
+}
+
+.extra-option small{
+  display:block;
+  max-width:620px;
+  margin-top:8px;
+  font-size:14px;
+}
+
+.extra-actions{
+  margin-top:14px !important;
+}
+
+.decision-row{
+  grid-template-columns:minmax(0,220px) minmax(0,1fr);
+  gap:clamp(14px,3vw,42px);
+  align-items:start;
+  padding:clamp(18px,3vw,30px) 0 !important;
+}
+
+.decision-row span{
+  max-width:760px;
+  font-size:clamp(16px,2vw,20px);
+}
+
+.extra-warning{
+  margin-top:clamp(22px,4vw,38px) !important;
+  border-radius:0 !important;
+  border-left:3px solid var(--wine) !important;
+  border-top:0 !important;
+  border-right:0 !important;
+  border-bottom:0 !important;
+  background:transparent !important;
+  padding:0 0 0 18px !important;
+  font-size:clamp(16px,2vw,20px);
+}
+
+/* Móvil: full-width limpio, sin aspecto de tarjeta */
+@media(max-width:899px){
+  :root{
+    --content-pad: 34px;
+  }
+
+  .route-brief{
+    padding:30px var(--content-pad) !important;
+  }
+
+  .brief-chips{
+    display:grid !important;
+    gap:8px !important;
+  }
+
+  .brief-chip{
+    width:100%;
+    justify-content:flex-start;
+    border-radius:0 !important;
+    border-left:0 !important;
+    border-right:0 !important;
+    background:transparent !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+  }
+
+  .extra-hero,
+  .extra-card{
+    padding:48px var(--content-pad) !important;
+  }
+
+  .extra-hero{
+    min-height:64vh;
+    min-height:64svh;
+  }
+
+  .extra-hero h2{
+    font-size:clamp(58px,16vw,88px) !important;
+    line-height:.82 !important;
+  }
+
+  .extra-hero p{
+    font-size:20px !important;
+    line-height:1.42 !important;
+  }
+
+  .extra-card > h3{
+    font-size:clamp(48px,14vw,76px) !important;
+    line-height:.86 !important;
+  }
+
+  .extra-card > p{
+    font-size:19px;
+  }
+
+  .extra-option,
+  .decision-row{
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+
+  .extra-option strong{
+    font-size:32px !important;
+  }
+
+  .extra-option span,
+  .decision-row span{
+    font-size:17px;
+  }
+
+  .extra-actions .btn{
+    width:100%;
+  }
+}
+
+
+/* V16 · revisión visual: hero, selector y barra móvil */
+@media(max-width:899px){
+  /* HERO: no puede cortar el titular */
+  .hero-card{
+    min-height:calc(100svh - 58px) !important;
+    border-radius:0 0 28px 28px !important;
+  }
+
+  .hero-content{
+    min-height:calc(100svh - 58px) !important;
+    justify-content:end;
+    align-content:end;
+    padding:clamp(22px,6vw,34px) 34px 42px !important;
+    gap:14px !important;
+  }
+
+  .hero h1{
+    font-size:clamp(42px,12.4vw,68px) !important;
+    line-height:.86 !important;
+    max-width:9.4ch !important;
+    letter-spacing:-.035em;
+  }
+
+  .hero-lead{
+    font-size:18px !important;
+    line-height:1.38 !important;
+    max-width:31ch !important;
+  }
+
+  .hero-actions{
+    gap:10px !important;
+    margin-top:2px;
+  }
+
+  .hero-actions .btn{
+    min-height:54px !important;
+    font-size:10px !important;
+  }
+
+  /* SELECTOR: fuera caja. Debe ser una sección editorial full-width */
+  .selector{
+    padding:0 !important;
+  }
+
+  .selector .wrap{
+    width:100% !important;
+    max-width:none !important;
+  }
+
+  .selector-panel{
+    width:100vw !important;
+    margin-left:calc(50% - 50vw) !important;
+    margin-right:calc(50% - 50vw) !important;
+    border-radius:0 !important;
+    border-left:0 !important;
+    border-right:0 !important;
+    box-shadow:none !important;
+    padding:42px 34px 34px !important;
+    background:linear-gradient(180deg,rgba(247,239,228,.94),rgba(234,220,200,.78)) !important;
+  }
+
+  .selector-head{
+    margin-bottom:28px !important;
+  }
+
+  .selector-head h2{
+    font-size:clamp(54px,15vw,82px) !important;
+    line-height:.82 !important;
+    max-width:7.4ch;
+  }
+
+  .selector-head p{
+    font-size:19px !important;
+    line-height:1.42 !important;
+    max-width:31ch;
+  }
+
+  .route-options{
+    display:grid !important;
+    gap:0 !important;
+    border-top:1px solid rgba(27,18,13,.13);
+  }
+
+  .route-option{
+    border:0 !important;
+    border-bottom:1px solid rgba(27,18,13,.13) !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    color:var(--ink) !important;
+    padding:22px 0 20px !important;
+    box-shadow:none !important;
+  }
+
+  .route-option:hover{
+    transform:none !important;
+  }
+
+  .route-option::after{
+    right:0 !important;
+    width:11px !important;
+    height:11px !important;
+    background:rgba(27,18,13,.22) !important;
+  }
+
+  .route-option.is-active{
+    background:transparent !important;
+    color:var(--ink) !important;
+  }
+
+  .route-option.is-active::after{
+    background:var(--wine) !important;
+  }
+
+  .route-option em{
+    color:var(--wine) !important;
+    font-size:10px !important;
+  }
+
+  .route-option strong{
+    margin-top:8px !important;
+    font-size:clamp(34px,10vw,54px) !important;
+    line-height:.88 !important;
+    max-width:8ch;
+  }
+
+  .route-option span{
+    color:var(--muted) !important;
+    font-size:16px !important;
+    line-height:1.34 !important;
+    max-width:27ch !important;
+  }
+
+  .route-option small{
+    color:#8b7660 !important;
+    font-size:11px !important;
+    max-width:30ch;
+  }
+
+  /* La barra inferior no debe aparecer en hero ni selector */
+  .bottom-rail{
+    transform:translateY(115%);
+    transition:transform .26s var(--ease);
+    pointer-events:none;
+  }
+
+  body.route-mode .bottom-rail{
+    transform:translateY(0);
+    pointer-events:auto;
+  }
+
+  /* Inicio de ruta más limpio */
+  .story-intro{
+    padding:42px 34px 18px !important;
+  }
+
+  .story-intro .wrap{
+    width:100% !important;
+  }
+
+  .story-intro h2{
+    font-size:clamp(48px,14vw,76px) !important;
+    line-height:.84 !important;
+    max-width:8ch;
+  }
+
+  .story-intro p{
+    font-size:18px;
+    line-height:1.42;
+    max-width:31ch;
+  }
+}
+
+@media(min-width:900px){
+  .selector-panel{
+    box-shadow:none !important;
+  }
+
+  .route-option{
+    box-shadow:none !important;
+  }
+}
+
+
+/* V17 · corrección hero + selección de ruta */
+@media(max-width:899px){
+  /* Hero full-bleed limpio: sin bordes laterales ni esquinas raras */
+  .hero{
+    padding:0 !important;
+    margin:0 !important;
+    background:var(--night);
+  }
+
+  .hero .wrap{
+    width:100% !important;
+    max-width:none !important;
+    margin:0 !important;
+  }
+
+  .hero-card{
+    width:100vw !important;
+    min-height:calc(100svh - 58px) !important;
+    margin:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+  }
+
+  .hero-content{
+    min-height:calc(100svh - 58px) !important;
+    padding:72px 34px 42px !important;
+    align-content:end !important;
+  }
+
+  .hero h1{
+    font-size:clamp(42px,12vw,66px) !important;
+    line-height:.87 !important;
+    max-width:9.2ch !important;
+  }
+
+  .hero-lead{
+    font-size:18px !important;
+    line-height:1.38 !important;
+    max-width:31ch !important;
+  }
+
+  /* Selector: 2 horas seleccionada por defecto, el resto apagadas */
+  .route-options{
+    border-top:1px solid rgba(27,18,13,.14) !important;
+  }
+
+  .route-option{
+    position:relative !important;
+    overflow:hidden !important;
+    min-height:150px;
+    transition:opacity .22s var(--ease), filter .22s var(--ease), transform .22s var(--ease) !important;
+  }
+
+  .route-option:not(.is-active){
+    opacity:.46;
+    filter:saturate(.72);
+  }
+
+  .route-option:not(.is-active)::before{
+    content:"Seleccionar";
+    position:absolute;
+    right:0;
+    top:22px;
+    z-index:4;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:32px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:rgba(27,18,13,.86);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    box-shadow:0 8px 24px rgba(27,18,13,.16);
+  }
+
+  .route-option:not(.is-active)::after{
+    opacity:.35;
+  }
+
+  .route-option.is-active{
+    opacity:1 !important;
+    filter:none !important;
+  }
+
+  .route-option.is-active::before{
+    content:"Seleccionada";
+    position:absolute;
+    right:0;
+    top:22px;
+    z-index:4;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:32px;
+    padding:8px 12px;
+    border-radius:999px;
+    background:var(--wine);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+
+  .route-option.is-active strong{
+    color:var(--ink) !important;
+  }
+
+  .route-option.is-active span,
+  .route-option.is-active small{
+    color:var(--muted) !important;
+  }
+
+  .route-option strong{
+    padding-right:112px;
+  }
+
+  .route-option span,
+  .route-option small{
+    padding-right:96px;
+  }
+}
+
+@media(min-width:900px){
+  .hero-card{
+    border-radius:0 !important;
+    box-shadow:none !important;
+  }
+
+  .hero .wrap{
+    width:100% !important;
+    max-width:none !important;
+  }
+
+  .hero-content{
+    padding-left:clamp(54px,7vw,96px) !important;
+    padding-right:clamp(54px,7vw,96px) !important;
+  }
+
+  .route-option:not(.is-active){
+    opacity:.62;
+    filter:saturate(.78);
+  }
+
+  .route-option:not(.is-active)::before{
+    content:"Seleccionar";
+    position:absolute;
+    right:16px;
+    top:16px;
+    z-index:4;
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(27,18,13,.82);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+
+  .route-option.is-active::before{
+    content:"Seleccionada";
+    position:absolute;
+    right:16px;
+    top:16px;
+    z-index:4;
+    padding:7px 10px;
+    border-radius:999px;
+    background:var(--wine);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:9px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+}
+
+
+/* V18 · UX mapa: entrar y salir del mapa en el mismo sitio */
+.map-expanded-actions{
+  grid-template-columns:1fr 1fr !important;
+}
+
+.map-expanded-actions .btn,
+.bottom-rail .btn{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+@media(max-width:899px){
+  .bottom-rail,
+  .map-expanded-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:14px !important;
+  }
+
+  .bottom-rail .btn,
+  .map-expanded-actions .btn{
+    min-height:54px !important;
+    border-radius:999px !important;
+    font-size:10px !important;
+    letter-spacing:.06em !important;
+  }
+
+  /* Mismo sitio: izquierda = cambiar modo */
+  #bottomOpenMap,
+  #centerCurrentStop{
+    grid-column:1;
+  }
+
+  /* Mismo sitio: derecha = acción secundaria */
+  #bottomNext,
+  #expandedEmergencyMaps{
+    grid-column:2;
+  }
+
+  #centerCurrentStop{
+    background:var(--wine) !important;
+    color:white !important;
+    border-color:var(--wine) !important;
+  }
+
+  #expandedEmergencyMaps{
+    background:white !important;
+    color:var(--ink) !important;
+    border-color:rgba(27,18,13,.12) !important;
+  }
+
+  .map-expanded-actions{
+    padding:12px 18px calc(12px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+
+/* V19 · limpieza de utilidad: sin información repetida */
+@media(max-width:899px){
+  .step-actions-text{
+    gap:10px !important;
+  }
+
+  .secret-mission{
+    margin-top:0 !important;
+    padding:12px 13px !important;
+  }
+
+  .secret-mission span,
+  .action-line span,
+  .stop-decision span{
+    font-size:9px !important;
+    letter-spacing:.07em !important;
+  }
+
+  .secret-mission p,
+  .action-line p,
+  .stop-decision p{
+    font-size:13.8px !important;
+    line-height:1.34 !important;
+  }
+
+  .details{
+    margin-top:0 !important;
+  }
+
+  .details summary{
+    opacity:.86;
+  }
+}
+
+
+/* V20 · móvil: número decorativo centrado y completo */
+@media(max-width:899px){
+  .step-number{
+    left:50% !important;
+    right:auto !important;
+    top:8vh !important;
+    width:max-content !important;
+    text-align:center !important;
+    font-size:clamp(148px,48vw,320px) !important;
+    line-height:.78 !important;
+    transform:translateX(-50%) translateY(18px) !important;
+    opacity:.95;
+  }
+
+  .step.is-active .step-number{
+    transform:translateX(-50%) translateY(0) !important;
+  }
+
+  /* Evita que el número invada demasiado el texto en pantallas estrechas */
+  .step-number{
+    color:rgba(255,255,255,.115) !important;
+  }
+
+  .step-content{
+    position:relative;
+    z-index:4;
+  }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#ruta">Saltar a la ruta</a>
+<header class="topbar">
+  <div class="wrap">
+    <nav class="nav">
+      <a class="brand" href="#inicio" aria-label="Guía de Zamora"><span class="brand-mark">Z</span><span>Guía Zamora</span></a>
+      <div class="nav-actions">
+        <a href="#selector">Rutas</a>
+        <a href="#ruta">Recorrido</a>
+        <a href="#extras">Extras</a>
+        <button class="primary" id="navChoose" type="button">Elegir</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <article class="hero-card">
+        <img id="heroImg" alt="Catedral de Zamora">
+        <div class="hero-content">
+          <span class="kicker" style="color:white">Ruta visual por Zamora</span>
+          <h1>Qué ver en Zamora según el tiempo que tengas</h1>
+          <p class="hero-lead">Elige una duración y baja por la guía. Cada parada funciona como una escena: foto, qué mirar, qué hacer y botón directo a Maps.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#selector">Elegir mi ruta</a>
+            <button class="btn outline" id="recommendedHero" type="button">Usar ruta recomendada</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="selector" id="selector">
+    <div class="wrap">
+      <div class="selector-panel">
+        <div class="selector-head">
+          <span class="kicker">Modo de visita</span>
+          <h2>¿Cuánto tiempo tienes?</h2>
+          <p>Elige el ritmo. La ruta baja contigo por capítulos y cada escena te dice exactamente qué mirar y qué hacer.</p>
+        </div>
+        <div class="route-options" id="routeOptions"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story-intro" id="ruta">
+    <div class="wrap">
+      <span class="kicker">Empieza la ruta</span>
+      <h2 id="routeHeading">Zamora imprescindible</h2>
+      <p id="routeLead">Baja y la guía irá avanzando contigo.</p>
+    </div>
+  </section>
+
+  <section class="wrap tour" aria-label="Ruta paso a paso">
+    <aside class="desktop-side">
+      <div class="route-title" id="desktopRouteTitle">Zamora imprescindible</div>
+      <div class="side-meta" id="desktopRouteMeta">2 horas · 7 paradas</div>
+      <div class="progress"><i id="desktopProgress"></i></div>
+      <section class="internal-map-card desktop-internal-map">
+        <div class="internal-map-head">
+          <div><span>Mapa</span><strong id="desktopMapTitle">Ruta activa</strong></div>
+          <small id="desktopMapMeta">—</small>
+        </div>
+        <div class="internal-map-view" id="desktopRouteMap"></div>
+        <div class="map-mode-tabs">
+          <button class="is-active" data-map-mode="next" type="button">Siguiente</button>
+          <button data-map-mode="current" type="button">Parada</button>
+          <button data-map-mode="area" type="button">Zona</button>
+        </div>
+        <div class="route-leg">
+          <span>Siguiente tramo</span>
+          <strong id="desktopLegTitle">—</strong>
+          <p id="desktopLegText">—</p>
+        </div>
+        <div class="internal-map-actions">
+          <button class="btn ghost" id="desktopOpenMap" type="button">Ver grande</button>
+          <a class="btn ghost" id="desktopEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
+        </div>
+      </section>
+      <div class="side-stops" id="desktopStops"></div>
+      <div class="side-actions">
+        <a class="btn dark" id="desktopMaps" href="#" target="_blank" rel="noopener">Abrir Maps</a>
+        <button class="btn ghost" id="desktopNext" type="button">Siguiente</button>
+      </div>
+    </aside>
+
+    <div>
+      <div class="mobile-hud" aria-live="polite">
+        <div class="mobile-hud-row">
+          <div>
+            <span id="mobileProgressLabel">01 / 07</span>
+            <strong id="mobileTitle">Plaza Mayor / Merlú</strong>
+          </div>
+          <small id="mobilePercent">14%</small>
+        </div>
+        <div class="progress"><i id="mobileProgress"></i></div>
+      </div>
+      <section class="internal-map-card mobile-internal-map">
+        <div class="internal-map-head">
+          <div><span>Mapa</span><strong id="mobileMapTitle">Ruta activa</strong></div>
+          <small id="mobileMapMeta">—</small>
+        </div>
+        <div class="internal-map-view" id="mobileRouteMap"></div>
+        <div class="map-mode-tabs">
+          <button class="is-active" data-map-mode="next" type="button">Siguiente</button>
+          <button data-map-mode="current" type="button">Parada</button>
+          <button data-map-mode="area" type="button">Zona</button>
+        </div>
+        <div class="route-leg">
+          <span>Siguiente tramo</span>
+          <strong id="mobileLegTitle">—</strong>
+          <p id="mobileLegText">—</p>
+        </div>
+        <div class="internal-map-actions">
+          <button class="btn ghost" id="mobileOpenMap" type="button">Mapa</button>
+          <a class="btn ghost" id="mobileEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
+        </div>
+      </section>
+      <article class="route-brief" id="routeBrief"></article>
+      <div class="story" id="storySteps"></div>
+    </div>
+  </section>
+
+  <section class="extras" id="extras">
+    <div class="wrap extras-utility">
+      <section class="extra-hero">
+        <span>Después de la ruta</span>
+        <h2>Ahora decide bien</h2>
+        <p>Los extras no son “más sitios”. Son decisiones rápidas para no alargar la visita sin sentido: qué merece la pena, qué saltar y qué hacer según el tiempo y la energía que te quede.</p>
+      </section>
+
+      <div class="extra-grid">
+        <section class="extra-card">
+          <h3>Si te queda tiempo</h3>
+          <p>Elige por tiempo real, no por ambición. Zamora se disfruta más cuando no intentas meterlo todo.</p>
+
+          <div class="extra-options">
+            <article class="extra-option">
+              <header><strong>15 minutos</strong><em>Foto rápida</em></header>
+              <span>Calle Balborraz. Es el extra más fácil si quieres una imagen urbana reconocible sin romper la ruta.</span>
+              <small>Ideal si sigues cerca del centro y no quieres bajar al Duero.</small>
+              <div class="extra-actions">
+                <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Calle+Balborraz+Zamora" target="_blank" rel="noopener">Abrir Maps</a>
+              </div>
+            </article>
+
+            <article class="extra-option">
+              <header><strong>30 minutos</strong><em>Vista + río</em></header>
+              <span>Puente de Piedra. Baja solo si quieres ver Zamora desde abajo y tienes energía para la vuelta.</span>
+              <small>El puente es medieval y durante siglos fue el paso clave sobre el Duero en la ciudad.</small>
+              <div class="extra-actions">
+                <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Puente+de+Piedra+Zamora" target="_blank" rel="noopener">Abrir Maps</a>
+              </div>
+            </article>
+
+            <article class="extra-option">
+              <header><strong>60 minutos</strong><em>Tramo tranquilo</em></header>
+              <span>Aceñas de Olivares. Mejor cuando ya has terminado la parte monumental y quieres una Zamora más lenta, junto al agua.</span>
+              <small>No lo metas en una visita rápida. Funciona mejor con calma.</small>
+              <div class="extra-actions">
+                <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Ace%C3%B1as+de+Olivares+Zamora" target="_blank" rel="noopener">Abrir Maps</a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="extra-card dark">
+          <h3>Qué saltarte sin culpa</h3>
+          <p>Una buena guía también te dice lo que no debes hacer cuando vas justo.</p>
+
+          <div class="extra-options">
+            <article class="extra-option">
+              <header><strong>No bajes al Puente</strong><em>Si vas cansado</em></header>
+              <span>La vista compensa, pero la vuelta se nota. Si ya cerraste en el Troncoso, puedes dejarlo ahí.</span>
+            </article>
+
+            <article class="extra-option">
+              <header><strong>No entres en todo</strong><em>Ruta corta</em></header>
+              <span>En 2 horas, prioriza exteriores. Si entras a Catedral o museos, la ruta cambia.</span>
+            </article>
+
+            <article class="extra-option">
+              <header><strong>No conviertas niños en alumnos</strong><em>Con niños</em></header>
+              <span>Menos explicación y más misión: contar arcos, buscar vistas, encontrar figuras o hacer una foto.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="extra-card wide">
+          <h3>Decisiones de guía</h3>
+          <p>Usa esto como brújula rápida durante la visita.</p>
+
+          <div class="decision-list">
+            <div class="decision-row">
+              <strong>Si solo puedes elegir un final</strong>
+              <span>Termina en el Mirador del Troncoso. Es el cierre más claro: Duero, puente y ciudad colocada desde fuera.</span>
+            </div>
+            <div class="decision-row">
+              <strong>Si quieres foto urbana</strong>
+              <span>Balborraz. Mejor como extra corto, no como eje de la ruta.</span>
+            </div>
+            <div class="decision-row">
+              <strong>Si quieres entender el río</strong>
+              <span>Puente de Piedra. Baja cuando tengas margen, no cuando estés cerrando la visita a la carrera.</span>
+            </div>
+            <div class="decision-row">
+              <strong>Si quieres bajar revoluciones</strong>
+              <span>Aceñas de Olivares. Es el extra más tranquilo, pero también el menos compatible con una visita rápida.</span>
+            </div>
+          </div>
+
+          <div class="extra-warning">
+            <strong>Regla simple:</strong> si estás en ruta de 2 horas, extras solo si te sobra tiempo. Si estás en medio día o 1 día, elige entre Puente y Aceñas según energía, no por obligación.
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="bottom-rail">
+  <button class="btn primary" id="bottomOpenMap" type="button">Mapa</button>
+  <button class="btn ghost" id="bottomNext" type="button">Siguiente</button>
+</div>
+
+
+<div class="map-expanded" id="expandedMapShell" aria-hidden="true">
+  <div class="map-expanded-head">
+    <div>
+      <span>Mapa de la ruta</span>
+      <strong id="expandedMapTitle">Ruta activa</strong>
+    </div>
+    <button class="map-close" id="closeExpandedMap" type="button" aria-label="Cerrar mapa">×</button>
+  </div>
+  <div class="map-expanded-view" id="expandedRouteMap"></div>
+  <div class="map-expanded-actions">
+    <button class="btn dark" id="centerCurrentStop" type="button">Volver al monumento</button>
+    <a class="btn ghost" id="expandedEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
+  </div>
+</div>
+
+<script>
+(() => {
+  const routes = [
+    {
+      id:"2h",
+      time:"2 horas",
+      title:"Zamora imprescindible",
+      short:"La mejor primera visita.",
+      desc:"Centro histórico, románico, Catedral, Castillo y cierre con vistas al Duero.",
+      mode:"Exterior + miradores",
+      difficulty:"Media-baja",
+      terrain:"Cuestas en Catedral y Castillo",
+      advice:"No entres en interiores si vas justo. Esta ruta está pensada para ver lo esencial por fuera.",
+      recommended:true,
+      notes:[
+        {after:3,label:"Aviso de guía",title:"La Catedral cambia el ritmo",text:"En esta ruta está pensada sobre todo por fuera. Si entras, suma tiempo y recorta otra parada."}
+      ],
+      stops:["plaza","viriato","magdalena","ildefonso","catedral","castillo","troncoso"]
+    },
+    {
+      id:"medio",
+      time:"Medio día",
+      title:"Historia + Duero",
+      short:"Más calma, mejores vistas y bajada al río.",
+      desc:"Una ruta más completa para entender la ciudad desde arriba y terminar junto al Duero.",
+      mode:"Monumental + paseo al río",
+      difficulty:"Media",
+      terrain:"Bajada al Duero y vuelta con subida",
+      advice:"Haz una pausa antes de bajar. El tramo del río merece la pena si no vas mirando el reloj.",
+      notes:[
+        {after:5,label:"Pausa recomendada",title:"Antes de bajar al Duero, para un momento",text:"A partir de aquí la ruta cambia: menos monumento cerrado y más paseo, vistas y río."},
+        {after:7,label:"Aviso de guía",title:"Bajar al Puente tiene vuelta",text:"Merece la pena, pero luego toca recuperar altura. Hazlo con margen."}
+      ],
+      stops:["plaza","viriato","magdalena","ildefonso","catedral","castillo","troncoso","puente","acenas"]
+    },
+    {
+      id:"dia",
+      time:"1 día",
+      title:"Zamora completa",
+      short:"Para verla sin correr.",
+      desc:"Añade ciudad viva, calles con carácter, miradores, río y una lectura más completa de Zamora.",
+      mode:"Mañana monumental + tarde de Duero",
+      difficulty:"Media",
+      terrain:"Ruta larga con tramos de subida y bajada",
+      advice:"No la hagas del tirón. Parte la visita: casco histórico por la mañana y río por la tarde.",
+      notes:[
+        {after:5,label:"Hora de partir la visita",title:"No lo hagas todo seguido",text:"Mañana: casco histórico, románico y Catedral. Tarde: Duero, Puente y Aceñas."},
+        {after:8,label:"Cambio de ritmo",title:"Ahora baja la ciudad y aparece el río",text:"A partir del Troncoso, Zamora deja de ser solo piedra: empieza el Duero."}
+      ],
+      stops:["plaza","santaclara","balborraz","viriato","magdalena","ildefonso","catedral","castillo","troncoso","puente","acenas"]
+    },
+    {
+      id:"kids",
+      time:"Con niños",
+      title:"Castillo y juego",
+      short:"Menos iglesias, más visual y más movimiento.",
+      desc:"Una versión más ligera, con menos densidad monumental y más paradas que funcionan visualmente.",
+      mode:"Ruta visual + misiones secretas",
+      difficulty:"Fácil-media",
+      terrain:"Mejor evitar bajar al río si van cansados",
+      advice:"No intentes dar una clase de historia. Convierte cada parada en una pequeña misión.",
+      kids:true,
+      notes:[
+        {after:2,label:"Consejo con niños",title:"No expliques demasiado",text:"Dales una misión visual y sigue. Funciona mejor que intentar que memoricen monumentos."},
+        {after:4,label:"Aviso de guía",title:"El Puente es opcional",text:"Si ya están cansados, termina en el Troncoso. La bajada al Puente suma esfuerzo."}
+      ],
+      stops:["plaza","balborraz","catedral","castillo","troncoso","puente"]
+    }
+  ];
+
+  const places = {
+    plaza:{title:"Plaza Mayor / Merlú",label:"Inicio",look:"Aquí no empieza una lista. Empieza la orientación.",must:"Ponte en el centro de la Plaza Mayor y mira la iglesia de San Juan de Puerta Nueva. Después localiza la escultura del Merlú: es la señal de que estás en el corazón histórico de Zamora.",curiosity:"Mucha gente cruza la plaza sin mirar arriba ni entender dónde está el eje real de la visita.",challenge:"Sal de la plaza hacia la Plaza de Viriato. No callejees sin rumbo: desde aquí empieza la subida natural hacia la parte monumental.",advice:"Empieza aquí porque desde la Plaza Mayor la ciudad se lee mejor.",decision:"Quédate 5-10 minutos, haz una foto de la plaza y sigue hacia Plaza de Viriato. No pierdas tiempo buscando calles secundarias todavía.",mission:"Encuentra el Merlú y señala hacia dónde crees que empieza la ruta monumental.",time:"10 min",query:"Plaza Mayor Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Plaza+Mayor+Zamora"},
+    viriato:{title:"Plaza de Viriato",label:"Historia",look:"Aquí la visita empieza a coger carácter.",must:"Colócate frente a la estatua de Viriato. Mira alrededor: el Parador, la plaza y la piedra cambian el tono de la visita. Aquí empieza la Zamora más solemne.",curiosity:"Viriato aquí no está de adorno: marca tono y relato.",challenge:"Haz una foto amplia de la estatua con la plaza detrás y sigue hacia Santa María Magdalena.",advice:"Buena parada para situarte antes de seguir subiendo.",decision:"No te quedes demasiado. Usa esta parada para orientarte y continúa hacia la zona de iglesias románicas.",mission:"Consigue una foto donde se vea la estatua y algo de la plaza, no solo la escultura.",time:"8 min",query:"Plaza de Viriato Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Plaza+de+Viriato+Zamora"},
+    magdalena:{title:"Santa María Magdalena",label:"Románico",look:"No intentes verla deprisa. Acércate.",must:"Acércate a la portada de la iglesia. No la mires desde lejos: los detalles de la piedra son lo importante.",curiosity:"Cuanto más te acercas, más aparece.",challenge:"Párate justo frente a la portada y busca figuras, caras o formas en la piedra antes de seguir.",advice:"Dedícale unos minutos de verdad o mejor sigue.",decision:"Si vas justo, no rodees toda la iglesia. Mira la portada principal durante 2 minutos y sigue hacia San Ildefonso.",mission:"Busca una figura tallada que parezca un animal, una cara o algo raro.",time:"10 min",query:"Iglesia de Santa Maria Magdalena Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Iglesia+de+Santa+Maria+Magdalena+Zamora"},
+    ildefonso:{title:"San Pedro y San Ildefonso",label:"Subida",look:"Parece sobria. Ese es parte del truco.",must:"Mira la iglesia como una transición: ya estás entrando en la parte alta de Zamora, camino de la Catedral.",curiosity:"Zamora guarda mucho detrás de fachadas discretas.",challenge:"Haz una parada breve, mira la fachada y sigue hacia la Catedral. Esta iglesia funciona como antesala, no como destino final si vas justo.",advice:"Sirve como antesala perfecta para la Catedral.",decision:"Si tu objetivo es llegar a la Catedral, no alargues aquí. Mírala por fuera y continúa.",mission:"Di si te parece una iglesia fuerte o silenciosa y sigue hacia la Catedral.",time:"8 min",query:"Iglesia de San Pedro y San Ildefonso Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Iglesia+de+San+Pedro+y+San+Ildefonso+Zamora"},
+    catedral:{title:"Catedral de Zamora",label:"Icono",look:"Aquí está el plato fuerte.",must:"Busca el cimborrio: es la parte más reconocible de la Catedral. No te quedes solo en la fachada; muévete un poco para verla con perspectiva.",curiosity:"No se te queda por el tamaño. Se te queda por la forma.",challenge:"Rodea la Catedral por fuera hasta encontrar el ángulo donde el cimborrio se ve mejor. Si tienes poco tiempo, esta es la foto clave.",advice:"No la veas solo de frente. Rodéala.",decision:"En la ruta de 2 horas, la solución es verla por fuera y seguir al Castillo. Entra solo si aceptas alargar la visita y saltarte otra parada.",mission:"Encuentra el punto exacto donde el cimborrio se ve más grande que el resto del edificio.",time:"15-20 min",query:"Catedral de Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Catedral+de+Zamora"},
+    castillo:{title:"Castillo y Murallas",label:"Altura",look:"Aquí entiendes la defensa.",must:"Desde el Castillo mira tres cosas juntas: la Catedral cerca, la muralla y el Duero al fondo. Esa combinación explica por qué Zamora está colocada aquí.",curiosity:"No es solo castillo: es posición, lectura de ciudad y control.",challenge:"Camina por la zona de muralla y busca una vista limpia. Después sigue hacia el Mirador del Troncoso para cerrar la ruta.",advice:"Con niños suele funcionar especialmente bien.",decision:"Si vas con niños, quédate más aquí y recorta otra iglesia. Es la parada más fácil para que se muevan sin aburrirse.",mission:"Busca una vista donde aparezcan muralla, Catedral y Duero en la misma escena.",time:"15 min",query:"Castillo de Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Castillo+de+Zamora"},
+    troncoso:{title:"Mirador del Troncoso",label:"Final",look:"El cierre con recompensa.",must:"Asómate al mirador y mira hacia el Duero. Busca el Puente de Piedra y entiende cómo la ciudad queda elevada sobre el río.",curiosity:"Aquí la ciudad por fin encaja como conjunto.",challenge:"Elige una palabra para describir Zamora mirando el Duero desde arriba.",advice:"Buen sitio para terminar cualquier primera visita.",decision:"Si estás cansado o vas justo de tiempo, termina aquí. La ruta ya tiene un cierre bueno sin bajar al Puente.",mission:"Elige una palabra para describir Zamora mirando el Duero desde arriba.",time:"10 min",query:"Mirador del Troncoso Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Mirador+del+Troncoso+Zamora"},
+    puente:{title:"Puente de Piedra",label:"Duero",look:"La ciudad desde abajo.",must:"Baja al Puente de Piedra y mira hacia atrás: lo importante es ver Zamora desde abajo, elevada sobre el Duero.",curiosity:"Era paso, control y comercio. No solo una foto bonita.",challenge:"Cruza solo si tienes margen. Si no, llega al inicio del puente, haz la foto hacia la ciudad y vuelve.",advice:"Baja solo si tu ruta tiene margen.",decision:"La decisión es simple: si vas cansado, no bajes. Si tienes 30 minutos y energía, baja al Puente y vuelve sin prisa.",mission:"Cuenta los arcos del puente antes de seguir.",time:"10-15 min",query:"Puente de Piedra Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Puente+de+Piedra+Zamora"},
+    acenas:{title:"Aceñas de Olivares",label:"Agua",look:"La Zamora que trabajaba con el agua.",must:"Mira las construcciones junto al agua: las Aceñas eran molinos que aprovechaban la fuerza del Duero.",curiosity:"Te cambia la imagen de ciudad medieval quieta.",challenge:"Imagina cómo sonaría el agua moviendo las ruedas de los molinos.",advice:"Mejor en rutas largas o de medio día.",decision:"Ve solo si estás haciendo medio día o día completo. Si estás en ruta corta, sáltala sin culpa.",mission:"Imagina cómo sonaría el agua moviendo las ruedas de los molinos.",time:"15-20 min",query:"Aceñas de Olivares Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Ace%C3%B1as+de+Olivares+Zamora"},
+    balborraz:{title:"Calle Balborraz",label:"Foto",look:"La postal urbana que sí merece la parada.",must:"Colócate en la parte alta o baja de Balborraz y mira la pendiente. Lo especial es la perspectiva de la calle, no un monumento concreto.",curiosity:"Explica sola el desnivel de la ciudad.",challenge:"Haz una foto vertical aprovechando la pendiente y vuelve al recorrido principal. Es una parada visual rápida.",advice:"Funciona muy bien si quieres una imagen urbana clara.",decision:"No la conviertas en desvío largo. Entra, haz la foto y vuelve a la ruta.",mission:"Haz una foto donde la calle parezca muy empinada.",time:"8 min",query:"Calle Balborraz Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Calle+Balborraz+Zamora"},
+    santaclara:{title:"Santa Clara / Modernismo",label:"Ciudad",look:"La prueba de que Zamora no se quedó en el siglo XII.",must:"Mira las fachadas y el movimiento de la calle. Esta parada sirve para ver que Zamora no es solo románico y piedra antigua.",curiosity:"Sirve para romper la idea de que todo es piedra antigua.",challenge:"Camina un tramo corto por Santa Clara y busca una fachada que rompa con la imagen medieval de la ruta.",advice:"Complemento, no núcleo, si vas justo.",decision:"Si tienes poco tiempo, puedes saltarla. Si haces ruta de 1 día, úsala para ver la Zamora más urbana.",mission:"Busca una fachada que no parezca medieval.",time:"15 min",query:"Calle Santa Clara Zamora",maps:"https://www.google.com/maps/search/?api=1&query=Calle+Santa+Clara+Zamora"}
+  };
+
+  const imageFallbacks = {
+    plaza:["https://commons.wikimedia.org/wiki/Special:Redirect/file/Zamora_-_Plaza_Mayor_01.jpg?width=1800","https://commons.wikimedia.org/wiki/Special:Redirect/file/Plaza_Mayor_de_Zamora.jpg?width=1800"],
+    viriato:["https://commons.wikimedia.org/wiki/Special:Redirect/file/321_ZAMORA_-_PLAZA_VIRIATO_-_MONUMENTO_A_VIRIATO_-_DIPUTACION_PROVINCIAL.JPG?width=1800","https://commons.wikimedia.org/wiki/Special:Redirect/file/Zamora_-_Plaza_de_Viriato.jpg?width=1800"],
+    magdalena:["https://www.romanicozamora.es/recursos/monumentos/santa-maria-magdalena-g-197.jpg","https://commons.wikimedia.org/wiki/Special:Redirect/file/Iglesia_de_Santa_Mar%C3%ADa_Magdalena%2C_Zamora.jpg?width=1800"],
+    ildefonso:["https://turismo-zamora.com/imagenes/articulos/images/turismo/iglesias-romanicas/san-pedro-san-ildefonso/iglesia-de-san-pedro-san-ildefonso-zamora.jpg","https://commons.wikimedia.org/wiki/Special:Redirect/file/Iglesia_de_San_Pedro_y_San_Ildefonso_Zamora.jpg?width=1800"],
+    catedral:["https://www.romanicozamora.es/recursos/editor/Cimborrio-3.jpg","https://commons.wikimedia.org/wiki/Special:Redirect/file/Catedral_de_Zamora_desde_el_castillo.jpg?width=1800"],
+    castillo:["https://commons.wikimedia.org/wiki/Special:FilePath/Zamora_Castillo_720.jpg?width=1800","https://commons.wikimedia.org/wiki/Special:Redirect/file/Castillo_de_Zamora_02.jpg?width=1800"],
+    troncoso:["https://espanaviajar.com/wp-content/uploads/2020/07/Mirador_-del_-troncoso_Zamora.jpg","https://commons.wikimedia.org/wiki/Special:Redirect/file/Mirador_del_Troncoso_Zamora.jpg?width=1800"],
+    puente:["https://commons.wikimedia.org/wiki/Special:Redirect/file/Puente_de_Piedra_de_Zamora.jpg?width=1800","https://commons.wikimedia.org/wiki/Special:Redirect/file/Zamora_Puente_de_Piedra.jpg?width=1800"],
+    acenas:["https://www.romanicozamora.es/recursos/monumentos/las-acenas-de-olivares-p-511.jpg","https://commons.wikimedia.org/wiki/Special:Redirect/file/Ace%C3%B1as_de_Olivares_Zamora.jpg?width=1800"],
+    balborraz:["https://commons.wikimedia.org/wiki/Special:Redirect/file/Calle_Balborraz_Zamora.jpg?width=1800"],
+    santaclara:["https://commons.wikimedia.org/wiki/Special:Redirect/file/Calle_Santa_Clara_de_Zamora.jpg?width=1800"]
+  };
+  Object.keys(imageFallbacks).forEach(k => places[k].images = imageFallbacks[k]);
+
+  const routeDirections = {
+    plaza:{minutes:"4 min",text:"Sal de Plaza Mayor hacia la zona monumental. Si ves la estatua de Viriato, vas bien."},
+    viriato:{minutes:"3 min",text:"Sigue hacia Santa María Magdalena. Es una parada corta, pero acércate a la portada."},
+    magdalena:{minutes:"3 min",text:"Continúa por la zona alta hacia San Pedro y San Ildefonso. No hace falta callejear."},
+    ildefonso:{minutes:"4 min",text:"Sigue la subida natural hacia la Catedral. Ya estás en el núcleo monumental."},
+    catedral:{minutes:"3 min",text:"Rodea la Catedral por fuera y avanza hacia el Castillo. No bajes todavía."},
+    castillo:{minutes:"4 min",text:"Desde la zona del Castillo ve hacia el Mirador del Troncoso. Es el cierre visual de la ruta corta."},
+    troncoso:{minutes:"8 min",text:"Baja al Puente solo si tienes margen. La vista es buena, pero luego toca recuperar altura."},
+    puente:{minutes:"10 min",text:"Sigue junto al Duero hacia las Aceñas de Olivares. Tramo tranquilo, mejor sin prisa."},
+    acenas:{minutes:"Final",text:"Fin natural de la ruta del río. Vuelve con calma o abre Maps si necesitas regresar al centro."},
+    balborraz:{minutes:"7 min",text:"Después de la foto, vuelve hacia la zona monumental. No conviertas Balborraz en desvío largo."},
+    santaclara:{minutes:"5 min",text:"Camina por Santa Clara y enlaza con Balborraz si quieres la parte más urbana de la ruta."}
+  };
+
+  const placeCoords = {
+    plaza:[41.50355,-5.74435],
+    viriato:[41.50195,-5.74725],
+    magdalena:[41.50127778,-5.75036111],
+    ildefonso:[41.50042562,-5.75109338],
+    catedral:[41.49945,-5.75365],
+    castillo:[41.49910,-5.75565],
+    troncoso:[41.49855,-5.75285],
+    puente:[41.49910,-5.75441],
+    acenas:[41.49665,-5.75620],
+    balborraz:[41.50270,-5.74575],
+    santaclara:[41.50445,-5.74280]
+  };
+
+
+  // Ruta de 2 horas seleccionada siempre por defecto al cargar
+  let selectedRoute = routes[0];
+  let activeStop = 0;
+  let observer;
+  const $ = id => document.getElementById(id);
+
+  function placeholderSvg(){
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000"><rect width="1600" height="1000" fill="#211711"/><path d="M0 720 C220 600 380 650 560 700 C770 760 980 630 1160 580 C1330 532 1450 560 1600 490 L1600 1000 L0 1000Z" fill="#526f7f" opacity=".32"/><circle cx="1300" cy="160" r="160" fill="#c99b57" opacity=".20"/></svg>`;
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+  }
+
+  function setImage(img, place){
+    const sources = place.images || [];
+    let i = 0;
+    img.referrerPolicy = "no-referrer";
+    function next(){
+      const src = sources[i];
+      if(!src){ img.onerror = null; img.src = placeholderSvg(); return; }
+      img.onerror = () => { i += 1; next(); };
+      img.onload = () => { img.onerror = null; };
+      img.src = src + (src.includes("?") ? "&" : "?") + "v=108";
+    }
+    next();
+  }
+
+  function googleQueryUrl(query, zoom = 16){
+    return `https://maps.google.com/maps?hl=es&q=${encodeURIComponent(query)}&z=${zoom}&output=embed`;
+  }
+
+  function googleAreaUrl(){
+    return `https://maps.google.com/maps?hl=es&q=${encodeURIComponent("casco histórico Zamora España")}&z=15&output=embed`;
+  }
+
+  function googleExternalDirectionsUrl(fromQuery, toQuery){
+    if(!toQuery) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fromQuery)}`;
+    return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(fromQuery)}&destination=${encodeURIComponent(toQuery)}&travelmode=walking`;
+  }
+
+  function mapFrameHTML(src, title){
+    return `<iframe class="google-map-frame" title="${title}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen src="${src}"></iframe>`;
+  }
+
+  function renderGoogleMaps(mode = "next"){
+    const key = selectedRoute.stops[activeStop];
+    const nextKey = selectedRoute.stops[activeStop + 1];
+    const place = places[key];
+    const nextPlace = nextKey ? places[nextKey] : null;
+
+    let compactSrc;
+    let compactTitle;
+
+    if(mode === "current"){
+      compactSrc = googleQueryUrl(place.query, 17);
+      compactTitle = `Mapa de ${place.title}`;
+    }else if(mode === "area"){
+      compactSrc = googleAreaUrl();
+      compactTitle = `Mapa general de la zona histórica de Zamora`;
+    }else{
+      const target = nextPlace || place;
+      compactSrc = googleQueryUrl(target.query, 17);
+      compactTitle = nextPlace ? `Siguiente parada: ${nextPlace.title}` : `Parada final: ${place.title}`;
+    }
+
+    ["mobileRouteMap","desktopRouteMap"].forEach(id => {
+      const el = $(id);
+      if(el) el.innerHTML = mapFrameHTML(compactSrc, compactTitle);
+    });
+
+    const expanded = $("expandedRouteMap");
+    if(expanded){
+      const expandedSrc = googleAreaUrl();
+      expanded.innerHTML = mapFrameHTML(expandedSrc, `Mapa general de la ruta: ${selectedRoute.title}`);
+    }
+
+    updateMapModeButtons(mode);
+  }
+
+  function updateMapModeButtons(mode){
+    document.querySelectorAll("[data-map-mode]").forEach(btn => {
+      btn.classList.toggle("is-active", btn.dataset.mapMode === mode);
+    });
+  }
+
+  function updateMapCopy(){
+    const key = selectedRoute.stops[activeStop];
+    const place = places[key];
+    const nextKey = selectedRoute.stops[activeStop + 1];
+    const nextPlace = nextKey ? places[nextKey] : null;
+    const dir = routeDirections[key] || {};
+    const title = nextPlace ? `${place.title} → ${nextPlace.title}` : `${place.title} · final`;
+    const text = nextPlace
+      ? `${dir.minutes || "Siguiente tramo"} · ${dir.text || "Sigue hacia la siguiente parada."}`
+      : "Has llegado al final de esta ruta. Usa el mapa grande para orientarte o volver al centro.";
+    const meta = `${activeStop + 1}/${selectedRoute.stops.length}`;
+
+    ["mobileMapTitle","desktopMapTitle","expandedMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
+    ["mobileMapMeta","desktopMapMeta"].forEach(id => $(id) && ($(id).textContent = meta));
+    ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
+    ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
+
+    const external = nextPlace ? googleExternalDirectionsUrl(place.query, nextPlace.query) : place.maps;
+    ["mobileEmergencyMaps","desktopEmergencyMaps","expandedEmergencyMaps"].forEach(id => $(id) && ($(id).href = external));
+  }
+
+  function openExpandedMap(){
+    $("expandedMapShell").classList.add("is-open");
+    $("expandedMapShell").setAttribute("aria-hidden","false");
+    renderGoogleMaps("next");
+  }
+
+  function closeExpandedMap(){
+    $("expandedMapShell").classList.remove("is-open");
+    $("expandedMapShell").setAttribute("aria-hidden","true");
+    renderGoogleMaps("next");
+  }
+
+
+  function renderOptions(){
+    $("routeOptions").innerHTML = routes.map(route => `
+      <button class="route-option ${route.id === selectedRoute.id ? "is-active" : ""}" data-route="${route.id}" type="button">
+        <em>${route.time}</em>
+        <strong>${route.title}</strong>
+        <span>${route.short}</span>
+        <small>${route.stops.length} paradas · ${places[route.stops[0]].title} → ${places[route.stops[route.stops.length - 1]].title}</small>
+      </button>
+    `).join("");
+
+    document.querySelectorAll("[data-route]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        selectedRoute = routes.find(r => r.id === btn.dataset.route);
+        activeStop = 0;
+        document.body.classList.add("route-mode");
+        renderAll();
+        setTimeout(() => document.querySelector(".step")?.scrollIntoView({behavior:"smooth", block:"start"}), 80);
+      });
+    });
+  }
+
+  function renderDesktopStops(){
+    $("desktopStops").innerHTML = selectedRoute.stops.map((key, idx) => `
+      <button class="side-stop ${idx === activeStop ? "is-active" : ""}" data-jump="${idx}" type="button">
+        <i>${idx+1}</i><strong>${places[key].title}</strong>
+      </button>
+    `).join("");
+    document.querySelectorAll("[data-jump]").forEach(btn => btn.addEventListener("click", () => goToStop(Number(btn.dataset.jump))));
+  }
+
+  function renderRouteBrief(){
+    $("routeBrief").innerHTML = `
+      <span class="route-brief-label">Antes de empezar</span>
+      <h3>${selectedRoute.time} · ${selectedRoute.mode}</h3>
+      <p>${selectedRoute.advice}</p>
+      <div class="brief-chips">
+        <span class="brief-chip"><strong>Dificultad</strong>${selectedRoute.difficulty}</span>
+        <span class="brief-chip"><strong>Terreno</strong>${selectedRoute.terrain}</span>
+        <span class="brief-chip"><strong>Final</strong>${places[selectedRoute.stops[selectedRoute.stops.length - 1]].title}</span>
+      </div>
+    `;
+  }
+
+  function guideNoteHTML(note){
+    return `
+      <section class="guide-note">
+        <div class="guide-note-inner">
+          <span>${note.label}</span>
+          <strong>${note.title}</strong>
+          <p>${note.text}</p>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderSteps(){
+    const notesByAfter = {};
+    (selectedRoute.notes || []).forEach(note => { notesByAfter[note.after] = note; });
+
+    $("storySteps").innerHTML = selectedRoute.stops.map((key, idx) => {
+      const p = places[key];
+      const number = String(idx + 1).padStart(2,"0");
+      const last = idx === selectedRoute.stops.length - 1;
+      const actionLabel = "Qué hacer ahora";
+      const actionText = p.challenge;
+      const extraDecision = selectedRoute.kids
+        ? `<div class="secret-mission"><span>Reto de la parada</span><p>${p.mission || p.challenge}</p></div>`
+        : `<div class="stop-decision"><span>Si vas justo</span><p>${p.decision || p.advice}</p></div>`;
+      const step = `
+      <section class="step ${idx === activeStop ? "is-active" : ""}" id="step-${idx}" data-step="${idx}">
+        <img data-step-img alt="${p.title}">
+        <div class="step-number">${number}</div>
+        <div class="step-inner">
+          <article class="step-content">
+            <div class="step-overline">${p.label} · ${p.time}</div>
+            <h3>${p.title}</h3>
+            <p class="step-look">${p.look}</p>
+            <div class="step-actions-text">
+              <div class="action-line"><span>Qué mirar</span><p>${p.must}</p></div>
+              <div class="action-line"><span>${actionLabel}</span><p>${actionText}</p></div>
+            </div>
+            ${extraDecision}
+            <details class="details">
+              <summary>Curiosidad y consejo</summary>
+              <p>${p.curiosity} ${p.advice}</p>
+            </details>
+            <div class="inline-actions">
+              <a class="btn light" href="${p.maps}" target="_blank" rel="noopener">Abrir Maps</a>
+              <button class="btn outline" data-next="${idx}" type="button">${last ? "Ver extras" : "Siguiente parada"}</button>
+            </div>
+          </article>
+        </div>
+      </section>`;
+      return step + (notesByAfter[idx] ? guideNoteHTML(notesByAfter[idx]) : "");
+    }).join("");
+
+    document.querySelectorAll("[data-step-img]").forEach((img, idx) => setImage(img, places[selectedRoute.stops[idx]]));
+
+    document.querySelectorAll("[data-next]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.dataset.next);
+        if(idx >= selectedRoute.stops.length - 1) $("extras").scrollIntoView({behavior:"smooth", block:"start"});
+        else goToStop(idx + 1);
+      });
+    });
+  }
+
+  function updateState(){
+    const key = selectedRoute.stops[activeStop];
+    const p = places[key];
+    const percent = Math.round(((activeStop + 1) / selectedRoute.stops.length) * 100);
+
+    $("routeHeading").textContent = selectedRoute.title;
+    $("routeLead").textContent = selectedRoute.desc;
+    $("mobileProgressLabel").textContent = `${String(activeStop+1).padStart(2,"0")} / ${String(selectedRoute.stops.length).padStart(2,"0")}`;
+    $("mobileTitle").textContent = p.title;
+    $("mobilePercent").textContent = `${percent}%`;
+    $("mobileProgress").style.width = `${percent}%`;
+    $("desktopProgress").style.width = `${percent}%`;
+    $("desktopRouteTitle").textContent = selectedRoute.title;
+    $("desktopRouteMeta").textContent = `${selectedRoute.time} · ${selectedRoute.stops.length} paradas`;
+    $("desktopMaps").href = p.maps;
+    $("desktopNext").textContent = activeStop >= selectedRoute.stops.length - 1 ? "Ver extras" : "Siguiente";
+    $("bottomNext").textContent = activeStop >= selectedRoute.stops.length - 1 ? "Ver extras" : "Siguiente parada";
+    document.querySelectorAll(".side-stop").forEach((el, idx) => el.classList.toggle("is-active", idx === activeStop));
+    document.querySelectorAll(".step").forEach((el, idx) => el.classList.toggle("is-active", idx === activeStop));
+    updateMapCopy();
+    renderGoogleMaps("next");
+  }
+
+  function goToStop(idx){
+    document.body.classList.add("route-mode");
+    activeStop = idx;
+    updateState();
+    document.getElementById(`step-${idx}`)?.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function buildObserver(){
+    observer?.disconnect();
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting && entry.intersectionRatio >= 0.58){
+          const idx = Number(entry.target.dataset.step);
+          if(idx !== activeStop){
+            activeStop = idx;
+            updateState();
+          }
+        }
+      });
+    }, {threshold:[0.58,0.7]});
+    document.querySelectorAll(".step").forEach(step => observer.observe(step));
+  }
+
+  function renderAll(){
+    renderOptions();
+    renderDesktopStops();
+    renderRouteBrief();
+    renderSteps();
+    setImage($("heroImg"), places.catedral);
+    updateState();
+    buildObserver();
+  }
+
+  $("navChoose").addEventListener("click", () => {
+    document.body.classList.remove("route-mode");
+    $("selector").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  $("recommendedHero").addEventListener("click", () => {
+    selectedRoute = routes[0];
+    activeStop = 0;
+    document.body.classList.add("route-mode");
+    renderAll();
+    $("ruta").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+
+  function next(){
+    if(activeStop >= selectedRoute.stops.length - 1) $("extras").scrollIntoView({behavior:"smooth", block:"start"});
+    else goToStop(activeStop + 1);
+  }
+
+  $("bottomNext").addEventListener("click", next);
+  $("desktopNext").addEventListener("click", next);
+  $("bottomOpenMap").addEventListener("click", openExpandedMap);
+  $("mobileOpenMap").addEventListener("click", openExpandedMap);
+  $("desktopOpenMap").addEventListener("click", openExpandedMap);
+  document.querySelectorAll("[data-map-mode]").forEach(btn => {
+    btn.addEventListener("click", () => renderGoogleMaps(btn.dataset.mapMode));
+  });
+  $("closeExpandedMap").addEventListener("click", closeExpandedMap);
+  $("centerCurrentStop").addEventListener("click", closeExpandedMap);
+  document.addEventListener("keydown", (event) => {
+    if(event.key === "Escape") closeExpandedMap();
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
