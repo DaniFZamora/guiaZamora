@@ -2384,6 +2384,22 @@ img{display:block;max-width:100%}
   }
 }
 
+
+/* Patch v20.1 · mapa centrado en monumento actual */
+@media(max-width:899px){
+  .map-expanded-head span::after{
+    content:"";
+  }
+
+  .map-expanded-head span{
+    font-size:9px !important;
+  }
+
+  .map-expanded-head strong{
+    max-width:10ch;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2502,7 +2518,7 @@ img{display:block;max-width:100%}
           <p id="mobileLegText">—</p>
         </div>
         <div class="internal-map-actions">
-          <button class="btn ghost" id="mobileOpenMap" type="button">Mapa</button>
+          <button class="btn ghost" id="mobileOpenMap" type="button">Ver mapa</button>
           <a class="btn ghost" id="mobileEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
         </div>
       </section>
@@ -2609,7 +2625,7 @@ img{display:block;max-width:100%}
 </main>
 
 <div class="bottom-rail">
-  <button class="btn primary" id="bottomOpenMap" type="button">Mapa</button>
+  <button class="btn primary" id="bottomOpenMap" type="button">Ver mapa</button>
   <button class="btn ghost" id="bottomNext" type="button">Siguiente</button>
 </div>
 
@@ -2838,8 +2854,7 @@ img{display:block;max-width:100%}
 
     const expanded = $("expandedRouteMap");
     if(expanded){
-      const expandedSrc = googleAreaUrl();
-      expanded.innerHTML = mapFrameHTML(expandedSrc, `Mapa general de la ruta: ${selectedRoute.title}`);
+      expanded.innerHTML = mapFrameHTML(compactSrc, compactTitle);
     }
 
     updateMapModeButtons(mode);
@@ -2863,7 +2878,8 @@ img{display:block;max-width:100%}
       : "Has llegado al final de esta ruta. Usa el mapa grande para orientarte o volver al centro.";
     const meta = `${activeStop + 1}/${selectedRoute.stops.length}`;
 
-    ["mobileMapTitle","desktopMapTitle","expandedMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
+    ["mobileMapTitle","desktopMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
+    if($("expandedMapTitle")) $("expandedMapTitle").textContent = place.title;
     ["mobileMapMeta","desktopMapMeta"].forEach(id => $(id) && ($(id).textContent = meta));
     ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
     ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
@@ -2875,7 +2891,7 @@ img{display:block;max-width:100%}
   function openExpandedMap(){
     $("expandedMapShell").classList.add("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","false");
-    renderGoogleMaps("next");
+    renderGoogleMaps("current");
   }
 
   function closeExpandedMap(){
