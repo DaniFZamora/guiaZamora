@@ -2400,6 +2400,106 @@ img{display:block;max-width:100%}
   }
 }
 
+
+/* Patch v20.2 · mapa de ruta completa + progreso actual */
+.map-route-status{
+  background:rgba(247,239,228,.96);
+  border:1px solid rgba(27,18,13,.10);
+  border-radius:20px;
+  padding:12px;
+  color:var(--ink);
+  box-shadow:0 12px 34px rgba(27,18,13,.12);
+}
+.map-route-status__top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.map-route-status__label{
+  display:block;
+  color:var(--wine);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.map-route-status__title{
+  display:block;
+  margin-top:4px;
+  font-family:var(--serif);
+  font-size:24px;
+  line-height:.92;
+  font-weight:400;
+}
+.map-route-status__count{
+  flex:0 0 auto;
+  color:#7c6d5d;
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.map-route-status__next{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.35;
+}
+.map-route-dots{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+  overflow-x:auto;
+  padding-bottom:2px;
+}
+.map-route-dot{
+  flex:0 0 auto;
+  min-width:30px;
+  height:30px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(27,18,13,.13);
+  background:#fff;
+  color:var(--ink);
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:800;
+}
+.map-route-dot.is-done{
+  background:var(--wine);
+  color:#fff;
+  border-color:var(--wine);
+}
+.map-route-dot.is-current{
+  background:var(--gold);
+  color:var(--ink);
+  border-color:var(--gold);
+  transform:scale(1.08);
+}
+@media(max-width:899px){
+  .map-expanded.is-open{
+    grid-template-rows:auto minmax(0,1fr) auto auto !important;
+  }
+  .map-expanded{
+    padding:0 !important;
+  }
+  .map-route-status{
+    border-radius:20px 20px 0 0;
+    border-left:0;
+    border-right:0;
+    border-bottom:0;
+    padding:12px 18px;
+  }
+  .map-route-status__title{
+    font-size:23px;
+    max-width:12ch;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2639,6 +2739,7 @@ img{display:block;max-width:100%}
     <button class="map-close" id="closeExpandedMap" type="button" aria-label="Cerrar mapa">×</button>
   </div>
   <div class="map-expanded-view" id="expandedRouteMap"></div>
+  <div class="map-route-status" id="mapRouteStatus"></div>
   <div class="map-expanded-actions">
     <button class="btn dark" id="centerCurrentStop" type="button">Volver al monumento</button>
     <a class="btn ghost" id="expandedEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
@@ -2835,7 +2936,10 @@ img{display:block;max-width:100%}
     let compactSrc;
     let compactTitle;
 
-    if(mode === "current"){
+    if(mode === "route"){
+      compactSrc = typeof googleFullRouteUrl === "function" ? googleFullRouteUrl() : googleAreaUrl();
+      compactTitle = `Ruta completa: ${selectedRoute.title}`;
+    }else if(mode === "current"){
       compactSrc = googleQueryUrl(place.query, 17);
       compactTitle = `Mapa de ${place.title}`;
     }else if(mode === "area"){
@@ -2866,6 +2970,45 @@ img{display:block;max-width:100%}
     });
   }
 
+
+  function renderMapRouteStatus(){
+    const box = $("mapRouteStatus");
+    if(!box) return;
+
+    const currentKey = selectedRoute.stops[activeStop];
+    const nextKey = selectedRoute.stops[activeStop + 1];
+    const current = places[currentKey];
+    const next = nextKey ? places[nextKey] : null;
+    const dir = routeDirections[currentKey] || {};
+    const count = `${activeStop + 1}/${selectedRoute.stops.length}`;
+
+    const dots = selectedRoute.stops.map((key, idx) => {
+      const cls = idx < activeStop ? "is-done" : idx === activeStop ? "is-current" : "";
+      return `<button class="map-route-dot ${cls}" type="button" data-map-dot="${idx}" aria-label="Ir a ${places[key].title}">${String(idx + 1).padStart(2,"0")}</button>`;
+    }).join("");
+
+    box.innerHTML = `
+      <div class="map-route-status__top">
+        <div>
+          <span class="map-route-status__label">Estás aquí</span>
+          <strong class="map-route-status__title">${current.title}</strong>
+        </div>
+        <span class="map-route-status__count">${count}</span>
+      </div>
+      <p class="map-route-status__next">${next ? `Siguiente: ${next.title} · ${dir.minutes || "siguiente tramo"}` : "Ruta terminada. Puedes volver al monumento o abrir Google Maps."}</p>
+      <div class="map-route-dots">${dots}</div>
+    `;
+
+    box.querySelectorAll("[data-map-dot]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeStop = Number(btn.dataset.mapDot);
+        updateState();
+        renderGoogleMaps("route");
+        renderMapRouteStatus();
+      });
+    });
+  }
+
   function updateMapCopy(){
     const key = selectedRoute.stops[activeStop];
     const place = places[key];
@@ -2879,7 +3022,7 @@ img{display:block;max-width:100%}
     const meta = `${activeStop + 1}/${selectedRoute.stops.length}`;
 
     ["mobileMapTitle","desktopMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
-    if($("expandedMapTitle")) $("expandedMapTitle").textContent = place.title;
+    if($("expandedMapTitle")) $("expandedMapTitle").textContent = selectedRoute.title;
     ["mobileMapMeta","desktopMapMeta"].forEach(id => $(id) && ($(id).textContent = meta));
     ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
     ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
@@ -2891,13 +3034,15 @@ img{display:block;max-width:100%}
   function openExpandedMap(){
     $("expandedMapShell").classList.add("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","false");
-    renderGoogleMaps("current");
+    renderGoogleMaps("route");
+    renderMapRouteStatus();
   }
 
   function closeExpandedMap(){
     $("expandedMapShell").classList.remove("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","true");
     renderGoogleMaps("next");
+    if($("expandedMapShell")?.classList.contains("is-open")) renderMapRouteStatus();
   }
 
 
