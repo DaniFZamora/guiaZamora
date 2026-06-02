@@ -2400,235 +2400,6 @@ img{display:block;max-width:100%}
   }
 }
 
-
-/* Patch v20.2 · mapa de ruta completa + progreso actual */
-.map-route-status{
-  background:rgba(247,239,228,.96);
-  border:1px solid rgba(27,18,13,.10);
-  border-radius:20px;
-  padding:12px;
-  color:var(--ink);
-  box-shadow:0 12px 34px rgba(27,18,13,.12);
-}
-.map-route-status__top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-}
-.map-route-status__label{
-  display:block;
-  color:var(--wine);
-  font-family:var(--mono);
-  font-size:9px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.07em;
-}
-.map-route-status__title{
-  display:block;
-  margin-top:4px;
-  font-family:var(--serif);
-  font-size:24px;
-  line-height:.92;
-  font-weight:400;
-}
-.map-route-status__count{
-  flex:0 0 auto;
-  color:#7c6d5d;
-  font-family:var(--mono);
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-}
-.map-route-status__next{
-  margin:10px 0 0;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.35;
-}
-.map-route-dots{
-  display:flex;
-  gap:6px;
-  margin-top:12px;
-  overflow-x:auto;
-  padding-bottom:2px;
-}
-.map-route-dot{
-  flex:0 0 auto;
-  min-width:30px;
-  height:30px;
-  border-radius:999px;
-  display:grid;
-  place-items:center;
-  border:1px solid rgba(27,18,13,.13);
-  background:#fff;
-  color:var(--ink);
-  font-family:var(--mono);
-  font-size:9px;
-  font-weight:800;
-}
-.map-route-dot.is-done{
-  background:var(--wine);
-  color:#fff;
-  border-color:var(--wine);
-}
-.map-route-dot.is-current{
-  background:var(--gold);
-  color:var(--ink);
-  border-color:var(--gold);
-  transform:scale(1.08);
-}
-@media(max-width:899px){
-  .map-expanded.is-open{
-    grid-template-rows:auto minmax(0,1fr) auto auto !important;
-  }
-  .map-expanded{
-    padding:0 !important;
-  }
-  .map-route-status{
-    border-radius:20px 20px 0 0;
-    border-left:0;
-    border-right:0;
-    border-bottom:0;
-    padding:12px 18px;
-  }
-  .map-route-status__title{
-    font-size:23px;
-    max-width:12ch;
-  }
-}
-
-
-/* Patch v20.3 · ventana mapa: ruta completa movible + ubicación actual */
-.map-expanded{
-  position:fixed;
-}
-.map-expanded.is-open{
-  display:grid !important;
-  grid-template-rows:auto minmax(0,1fr) auto !important;
-}
-.map-expanded-view{
-  position:relative;
-  min-height:0;
-}
-.map-route-status{
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:92px;
-  z-index:5;
-  background:rgba(247,239,228,.94);
-  border:1px solid rgba(27,18,13,.10);
-  border-radius:20px;
-  padding:11px 12px;
-  color:var(--ink);
-  box-shadow:0 12px 34px rgba(27,18,13,.18);
-  pointer-events:none;
-}
-.map-route-status *{
-  pointer-events:none;
-}
-.map-route-dots,
-.map-route-dot{
-  pointer-events:auto;
-}
-.map-route-status__top{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-}
-.map-route-status__label{
-  display:block;
-  color:var(--wine);
-  font-family:var(--mono);
-  font-size:9px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.07em;
-}
-.map-route-status__title{
-  display:block;
-  margin-top:4px;
-  font-family:var(--serif);
-  font-size:24px;
-  line-height:.92;
-  font-weight:400;
-}
-.map-route-status__count{
-  flex:0 0 auto;
-  color:#7c6d5d;
-  font-family:var(--mono);
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-}
-.map-route-status__next{
-  margin:8px 0 0;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.34;
-}
-.map-route-dots{
-  display:flex;
-  gap:6px;
-  margin-top:10px;
-  overflow-x:auto;
-  padding-bottom:2px;
-}
-.map-route-dot{
-  flex:0 0 auto;
-  min-width:28px;
-  height:28px;
-  border-radius:999px;
-  display:grid;
-  place-items:center;
-  border:1px solid rgba(27,18,13,.13);
-  background:#fff;
-  color:var(--ink);
-  font-family:var(--mono);
-  font-size:9px;
-  font-weight:800;
-}
-.map-route-dot.is-done{
-  background:var(--wine);
-  color:#fff;
-  border-color:var(--wine);
-}
-.map-route-dot.is-current{
-  background:var(--gold);
-  color:var(--ink);
-  border-color:var(--gold);
-}
-@media(max-width:899px){
-  .map-expanded{
-    padding:0 !important;
-  }
-  .map-expanded-head{
-    z-index:8;
-  }
-  .map-expanded-view{
-    border-radius:0 !important;
-  }
-  .map-route-status{
-    left:14px;
-    right:14px;
-    top:124px;
-    max-height:132px;
-    overflow:hidden;
-  }
-  .map-route-status__title{
-    font-size:22px;
-    max-width:12ch;
-  }
-  .map-route-status__next{
-    font-size:12.5px;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -2867,9 +2638,7 @@ img{display:block;max-width:100%}
     </div>
     <button class="map-close" id="closeExpandedMap" type="button" aria-label="Cerrar mapa">×</button>
   </div>
-  <div class="map-expanded-view" id="expandedRouteMap">
-    <div class="map-route-status" id="mapRouteStatus"></div>
-  </div>
+  <div class="map-expanded-view" id="expandedRouteMap"></div>
   <div class="map-expanded-actions">
     <button class="btn dark" id="centerCurrentStop" type="button">Volver al monumento</button>
     <a class="btn ghost" id="expandedEmergencyMaps" href="#" target="_blank" rel="noopener">Google Maps</a>
@@ -3053,18 +2822,6 @@ img{display:block;max-width:100%}
     return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(fromQuery)}&destination=${encodeURIComponent(toQuery)}&travelmode=walking`;
   }
 
-
-  function googleRouteWindowUrl(){
-    const routeQueries = selectedRoute.stops.map(key => places[key].query);
-    if(routeQueries.length < 2){
-      return googleQueryUrl(routeQueries[0] || "Zamora España", 16);
-    }
-
-    // Ruta completa con todos los puntos.
-    // Es iframe movible de Google Maps, y nuestra UI propia indica dónde estás.
-    return `https://www.google.com/maps/dir/${routeQueries.map(q => encodeURIComponent(q)).join("/")}/?hl=es&travelmode=walking&output=embed`;
-  }
-
   function mapFrameHTML(src, title){
     return `<iframe class="google-map-frame" title="${title}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen src="${src}"></iframe>`;
   }
@@ -3078,13 +2835,7 @@ img{display:block;max-width:100%}
     let compactSrc;
     let compactTitle;
 
-    if(mode === "route"){
-      compactSrc = googleRouteWindowUrl();
-      compactTitle = `Ruta completa: ${selectedRoute.title}`;
-    }else if(mode === "route"){
-      compactSrc = googleRouteWindowUrl();
-      compactTitle = `Ruta completa: ${selectedRoute.title}`;
-    }else if(mode === "current"){
+    if(mode === "current"){
       compactSrc = googleQueryUrl(place.query, 17);
       compactTitle = `Mapa de ${place.title}`;
     }else if(mode === "area"){
@@ -3103,7 +2854,7 @@ img{display:block;max-width:100%}
 
     const expanded = $("expandedRouteMap");
     if(expanded){
-      expanded.innerHTML = mapFrameHTML(compactSrc, compactTitle) + `<div class="map-route-status" id="mapRouteStatus"></div>`;
+      expanded.innerHTML = mapFrameHTML(compactSrc, compactTitle);
     }
 
     updateMapModeButtons(mode);
@@ -3112,45 +2863,6 @@ img{display:block;max-width:100%}
   function updateMapModeButtons(mode){
     document.querySelectorAll("[data-map-mode]").forEach(btn => {
       btn.classList.toggle("is-active", btn.dataset.mapMode === mode);
-    });
-  }
-
-
-  function renderMapRouteStatus(){
-    const box = $("mapRouteStatus");
-    if(!box) return;
-
-    const currentKey = selectedRoute.stops[activeStop];
-    const nextKey = selectedRoute.stops[activeStop + 1];
-    const current = places[currentKey];
-    const next = nextKey ? places[nextKey] : null;
-    const dir = routeDirections[currentKey] || {};
-    const count = `${activeStop + 1}/${selectedRoute.stops.length}`;
-
-    const dots = selectedRoute.stops.map((key, idx) => {
-      const cls = idx < activeStop ? "is-done" : idx === activeStop ? "is-current" : "";
-      return `<button class="map-route-dot ${cls}" type="button" data-map-dot="${idx}" aria-label="Ir a ${places[key].title}">${String(idx + 1).padStart(2,"0")}</button>`;
-    }).join("");
-
-    box.innerHTML = `
-      <div class="map-route-status__top">
-        <div>
-          <span class="map-route-status__label">Estás aquí</span>
-          <strong class="map-route-status__title">${current.title}</strong>
-        </div>
-        <span class="map-route-status__count">${count}</span>
-      </div>
-      <p class="map-route-status__next">${next ? `Siguiente: ${next.title} · ${dir.minutes || "siguiente tramo"}` : "Ruta terminada. Puedes volver al monumento o abrir Google Maps."}</p>
-      <div class="map-route-dots">${dots}</div>
-    `;
-
-    box.querySelectorAll("[data-map-dot]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        activeStop = Number(btn.dataset.mapDot);
-        updateState();
-        renderGoogleMaps("route");
-        renderMapRouteStatus();
-      });
     });
   }
 
@@ -3167,7 +2879,7 @@ img{display:block;max-width:100%}
     const meta = `${activeStop + 1}/${selectedRoute.stops.length}`;
 
     ["mobileMapTitle","desktopMapTitle"].forEach(id => $(id) && ($(id).textContent = selectedRoute.title));
-    if($("expandedMapTitle")) $("expandedMapTitle").textContent = selectedRoute.title;
+    if($("expandedMapTitle")) $("expandedMapTitle").textContent = place.title;
     ["mobileMapMeta","desktopMapMeta"].forEach(id => $(id) && ($(id).textContent = meta));
     ["mobileLegTitle","desktopLegTitle"].forEach(id => $(id) && ($(id).textContent = title));
     ["mobileLegText","desktopLegText"].forEach(id => $(id) && ($(id).textContent = text));
@@ -3179,15 +2891,13 @@ img{display:block;max-width:100%}
   function openExpandedMap(){
     $("expandedMapShell").classList.add("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","false");
-    renderGoogleMaps("route");
-    renderMapRouteStatus();
+    renderGoogleMaps("current");
   }
 
   function closeExpandedMap(){
     $("expandedMapShell").classList.remove("is-open");
     $("expandedMapShell").setAttribute("aria-hidden","true");
     renderGoogleMaps("next");
-    if($("expandedMapShell")?.classList.contains("is-open")) renderMapRouteStatus();
   }
 
 
